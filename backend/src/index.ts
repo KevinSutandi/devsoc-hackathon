@@ -3,6 +3,8 @@ import express from "express";
 // import { authMiddleWare } from "./middleware/auth.middleware";
 import cors from "cors";
 import auth from "./routes/auth";
+import users from "./routes/users";
+import { authMiddleWare } from "./middleware/auth.middleware";
 
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -17,6 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", auth);
+app.use("/api/users", authMiddleWare, users);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
