@@ -7,7 +7,6 @@ import {
 import ButtonAddEvent from './ButtonAddEvent';
 
 const Sidebar = () => {
-
     return (
         <div className='fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl rounded-r-xl pt-10'>
             <div className='flex flex-col w-full items-center gap-1'>
@@ -18,7 +17,7 @@ const Sidebar = () => {
 
             <div className='flex flex-col w-full gap-10 mt-14 mb-10'>
                 <SidebarButton href='/' Icon={<HomeIcon />} text='Home' />
-                <SidebarButton href='/courses' text='Journal' Icon={<BookOpenIcon />} />
+                <SidebarButton href='/journal' text='My Journal' Icon={<BookOpenIcon />} />
                 <div className='flex justify-center w-full mt-8'>
                     <ButtonAddEvent />
                 </div>
