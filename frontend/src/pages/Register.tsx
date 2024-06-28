@@ -25,6 +25,7 @@ export default function Register() {
         resolver: zodResolver(registerSchema),
         defaultValues: {
             name: "",
+            username: "",
             email: "",
             password: "",
             confirmPassword: "",
@@ -37,6 +38,7 @@ export default function Register() {
             console.log(data)
             await axios.post("/api/auth/register", {
                 email: data.email,
+                username: data.username,
                 password: data.password,
                 fullname: data.name,
             });
@@ -77,6 +79,25 @@ export default function Register() {
                                 />
                                 {errors.name && (
                                     <p className="text-red-600 text-sm">{errors.name.message}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="name"
+                                className="block text-sm font-medium leading-6 text-gray-900"
+                            >
+                                Username
+                            </label>
+                            <div className="mt-3">
+                                <Textbox
+                                    id="username"
+                                    {...register("username")}
+                                    type="text"
+                                    autoComplete="username"
+                                />
+                                {errors.username && (
+                                    <p className="text-red-600 text-sm">{errors.username.message}</p>
                                 )}
                             </div>
                         </div>

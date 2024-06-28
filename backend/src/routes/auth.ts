@@ -7,21 +7,24 @@ import {
     dbAddUser,
     dbFindUserByEmail,
     dbFindUserByResetToken,
+    dbGetJwtUserById,
+    dbGetUserByUsername,
     dbSetNewPassword,
     dbSetResetToken,
 } from "../models/auth.models";
+import { dbCreateUserProfile } from "../models/users.models";
+import { Profile } from "@prisma/client";
 
 const router = express.Router();
 
-interface JwtUser {
-    id: string;
+interface JwtUser extends Profile {
     email: string;
 }
 
 router.post("/register", async (req, res) => {
-    const { email, password, fullname } = req.body;
+    const { email, password, fullname, username } = req.body;
 
-    if (!email || !password || !fullname) {
+    if (!email || !password || !fullname || !username) {
         return res.status(400).send("Some details are missing");
     }
 
@@ -40,6 +43,10 @@ router.post("/register", async (req, res) => {
         if (profile) {
             return res.status(400).send("Email already in use");
         }
+        const profile2 = await dbGetUserByUsername(username);
+        if (profile2) {
+            return res.status(400).send("Username already in use");
+        }
     } catch (error) {
         return res.status(500).send("Server error");
     }
@@ -49,10 +56,12 @@ router.post("/register", async (req, res) => {
 
     try {
         // Adds the user to the database
-        const profile = await dbAddUser(email, hashedPassword);
+        const user = await dbAddUser(email, hashedPassword);
+        await dbCreateUserProfile(user.id, username, fullname);
 
         // Makes the token and sends it to the user
-        const jwtUser: JwtUser = { id: profile.id, email: profile.email };
+        const jwtUser: JwtUser = await dbGetJwtUserById(user.id);
+
         if (!process.env.JWT_HASH) {
             throw new Error("JWT_HASH not defined");
         }
@@ -73,18 +82,17 @@ router.post("/login", async (req, res) => {
         return res.status(400).send("Some details are missing");
     }
 
-    // Check if the email is already in use
     try {
-        const profile = await dbFindUserByEmail(email);
-        if (!profile) {
+        const user = await dbFindUserByEmail(email);
+        if (!user) {
             return res.status(400).send("Invalid email or password");
         }
-        if (profile.password !== sha256(password)) {
+        if (user.password !== sha256(password)) {
             return res.status(400).send("Invalid email or password");
         }
 
         // Makes the token and sends it to the user
-        const jwtUser: JwtUser = { id: profile.id, email: profile.email };
+        const jwtUser: JwtUser = await dbGetJwtUserById(user.id);
         if (!process.env.JWT_HASH) {
             throw new Error("JWT_HASH not defined");
         }
