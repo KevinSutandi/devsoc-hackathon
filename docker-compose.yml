@@ -1,6 +1,8 @@
 version: "3.8"
 services:
   backend:
+    build: 
+      context: ./backend
     image: hindiesuputra/hackathon-be
     depends_on:
       - db
@@ -19,7 +21,8 @@ services:
       - db_vol:/var/lib/mysql
 
   frontend:
-    image: hindiesuputra/hackathon-fe
+    build: 
+      context: ./frontend
     ports:
       - "80:80"
     depends_on:
