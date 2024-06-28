@@ -12,12 +12,12 @@ import ButtonAddEvent from './ButtonAddEvent';
 const Sidebar = () => {
     const navigation = useNavigate()
 
-    const token = Cookies.get('token');
-    useEffect(() => {
-        if (token === undefined) {
-            navigation('/')
-        }
-    }, [navigation, token]);
+    // const token = Cookies.get('token');
+    // useEffect(() => {
+    //     if (token === undefined) {
+    //         navigation('/')
+    //     }
+    // }, [navigation, token]);
 
     return (
         <div className='fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl rounded-r-xl pt-10'>
@@ -29,7 +29,7 @@ const Sidebar = () => {
 
             <div className='flex flex-col w-full gap-14 mt-20 mb-10'>
                 <SidebarButton href='/' Icon={<HomeIcon />} text='Home' />
-                <SidebarButton href='/courses' text='Journal' Icon={<BookOpenIcon />} />
+                <SidebarButton href='/journal' text='My Journal' Icon={<BookOpenIcon />} />
                 <div className='flex justify-center w-full'>
                     <ButtonAddEvent />
                 </div>
