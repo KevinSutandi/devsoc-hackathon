@@ -17,5 +17,16 @@ model User {
   id         String  @id @default(uuid())
   email      String  @unique
   password   String
+  profile    Profile?
   resetToken String? @unique
+}
+
+model Profile {
+  uid    String @unique @id
+  user      User   @relation(fields: [uid], references: [id])
+  fullname  String
+  username  String @unique
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
