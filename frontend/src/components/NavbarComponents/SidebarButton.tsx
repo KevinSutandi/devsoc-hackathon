@@ -19,7 +19,7 @@ const SidebarButton: FC<SidebarButtonProps> = ({
 
     // Clone the Icon with additional classes
     const IconWithClasses = React.cloneElement(Icon, {
-        className: `${Icon.props.className || ''} h-[24px] w-[24px]`,
+        className: `${Icon.props.className || ''} h-[20px] w-[20px]`,
     });
 
     // Check if the current route matches the href
@@ -28,10 +28,10 @@ const SidebarButton: FC<SidebarButtonProps> = ({
     return (
         <Link
             to={href}
-            className={`flex items-center text-gray-500 hover:text-indigo-600 pl-12 px-10 ${isActive ? 'text-indigo-600' : '' // Apply active state styling conditionally
+            className={`flex text-gray-500 hover:text-indigo-600 pl-12 px-10 ${isActive ? 'text-indigo-600' : '' // Apply active state styling conditionally
                 }`}
         >
-            <div className='flex justify-start w-full'>
+            <div className='flex justify-start items-center w-full'>
                 {IconWithClasses}
                 <p className='ml-6 text-lg'>{text}</p>
             </div>
