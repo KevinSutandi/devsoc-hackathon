@@ -6,6 +6,7 @@ export const registerSchema = z
     name: z.string().min(1, "Full name is required").refine(validateName, {
       message: "Invalid name",
     }),
+    username: z.string().min(1, "Username is required"),
     email: z.string().email("Invalid email address"),
     password: z
       .string()
