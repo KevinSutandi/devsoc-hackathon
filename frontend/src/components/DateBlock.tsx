@@ -36,7 +36,7 @@ const DateBlock = ( { day, date } : { day: number, date: number } ) => {
   }
   
   return (
-    <div className="bg-yellow-400 rounded-2xl px-4 py-2 flex flex-wrap justify-center text-center">
+    <div className="bg-yellow-200 rounded-2xl px-4 py-2 flex flex-wrap justify-center text-center">
       <p className="w-full font-bold text-xl">{`${dayString}`}</p>
       <p className="w-full font-bold text-4xl mt-2">{`${date}`}</p>
     </div>
