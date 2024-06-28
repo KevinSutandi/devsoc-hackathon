@@ -1,5 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
+import { authMiddleWare } from "./middleware/auth.middleware";
 import cors from "cors";
 import auth from "./routes/auth";
 
