@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ButtonEmoji from "../components/ButtonEmoji";
 
 const Home: React.FC = () => {
-  const handleChosenEmoji = () => {
+  const [emoji, setEmoji] = useState<string>("");
+  const emojis = ["😊", "😐", "😕", "👿", "😰", "😂"];
+
+  const handleChosenEmoji = (emoji: string) => {
     console.log("mekii");
+    setEmoji(emoji);
   };
+
+  useEffect(() => {
+    console.log(emoji);
+  }, [emoji]);
+
   return (
     <div className="p-20 border-2 h-screen">
       <h1 className="text-4xl">Mood Calender</h1>
@@ -22,12 +31,12 @@ const Home: React.FC = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-x-[12%] w-full h-[75%] justify-center items-center pb-[6%]">
-                <ButtonEmoji emoji="😊" onClick={handleChosenEmoji} />
-                <ButtonEmoji emoji="😐" onClick={handleChosenEmoji} />
-                <ButtonEmoji emoji="😕" onClick={handleChosenEmoji} />
-                <ButtonEmoji emoji="👿" onClick={handleChosenEmoji} />
-                <ButtonEmoji emoji="😰" onClick={handleChosenEmoji} />
-                <ButtonEmoji emoji="😂" onClick={handleChosenEmoji} />
+                {emojis.map((emoji) => (
+                  <ButtonEmoji
+                    emoji={emoji}
+                    onClick={() => handleChosenEmoji(emoji)}
+                  />
+                ))}
               </div>
             </div>
 
