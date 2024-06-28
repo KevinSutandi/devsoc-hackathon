@@ -1,14 +1,12 @@
 import { z } from "zod";
-import { validateName, validateZid, validatePassword } from "./auth.check";
+import { validateName, validatePassword } from "./auth.check";
 
 export const registerSchema = z
   .object({
     name: z.string().min(1, "Full name is required").refine(validateName, {
       message: "Invalid name",
     }),
-    zId: z.string().min(1, "zID is required").refine(validateZid, {
-      message: "Invalid zID format",
-    }),
+    username: z.string().min(1, "Username is required"),
     email: z.string().email("Invalid email address"),
     password: z
       .string()
