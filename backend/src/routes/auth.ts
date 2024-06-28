@@ -82,7 +82,6 @@ router.post("/login", async (req, res) => {
     return res.status(400).send("Some details are missing");
   }
 
-  // Check if the email is already in use
   try {
     const user = await dbFindUserByEmail(email);
     if (!user) {
