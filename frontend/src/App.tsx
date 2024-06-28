@@ -1,15 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Get from "./pages/Get";
-import Post from "./pages/Post";
+import Dashboard from "./pages/Dashboard";
+import SidebarLayout from "./components/SidebarLayout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Get />}></Route>
-        <Route path="/get" element={<Get />}></Route>
-        <Route path="/post" element={<Post />}></Route>
+        <Route element={<SidebarLayout />}>
+          <Route path="/" element={<Dashboard />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
