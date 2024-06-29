@@ -71,7 +71,7 @@ const Profile: React.FC = () => {
         <div className="relative w-32 h-32 hover:opacity-40 transition-opacity duration-300">
           <div className="absolute inset-0 flex items-center justify-center opacity-100 bg-black bg-opacity-50 rounded-full">
             <img
-              src={imagePreview === '' ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png' : imagePreview}
+              src={imagePreview === '' ? 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg' : imagePreview}
               alt="Profile"
               className="w-32 h-32 object-cover rounded-full"
             />

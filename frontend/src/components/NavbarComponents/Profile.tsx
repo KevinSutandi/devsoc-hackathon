@@ -8,6 +8,7 @@ import {
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../context/ProfileContext";
+import { useEffect } from "react";
 
 
 function classNames(...classes: string[]) {
@@ -15,8 +16,12 @@ function classNames(...classes: string[]) {
 }
 
 export default function Profile() {
-  const { entryData } = useProfile();
+  const { entryData, fetchProfileData } = useProfile();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -31,8 +36,8 @@ export default function Profile() {
       <div>
         <MenuButton className="flex w-full justify-start items-center gap-x-5 rounded-md px-7 py-5 text-sm text-gray-900">
           <img
-            className="w-11 h-11 rounded-full"
-            src={entryData.image}
+            className="w-10 h-10 rounded-full"
+            src={entryData.image ? entryData.image : "https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"}
             alt="Rounded avatar"
           />
           <div className="flex flex-col w-full justify-start items-start tracking-widest">

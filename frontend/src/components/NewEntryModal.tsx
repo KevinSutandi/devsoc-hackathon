@@ -14,6 +14,7 @@ import { z } from "zod";
 import { useJournal } from "../context/JournalContext";
 import ButtonEmoji from "./ButtonEmoji";
 import { useEmoji } from "../context/EmojiContext";
+import { useCalendar } from "../context/CalendarContext";
 
 type NewEntryProps = z.infer<typeof newEntrySchema>;
 
@@ -45,6 +46,7 @@ export default function MyModal({ open, close }: { open: boolean; close: () => v
   };
 
   const { fetchJournalData } = useJournal();
+  const { fetchCalendarData } = useCalendar();
 
   const { currentEmoji } = useEmoji();
   const onSubmit = async (data: NewEntryProps) => {
@@ -57,9 +59,12 @@ export default function MyModal({ open, close }: { open: boolean; close: () => v
       });
       console.log(response);
       fetchJournalData();
+      fetchCalendarData();
       setValue("title", "");
       setValue("content", "");
       close();
+      //Refresh the page
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -110,11 +115,11 @@ export default function MyModal({ open, close }: { open: boolean; close: () => v
                     <ButtonEmoji
                       key={key}
                       emoji={feelingEmoji[key]}
-                      onClick={() => {}}
+                      onClick={() => { }}
                       modalMode={true}
                     />
                   ))}
-                </div>  
+                </div>
                 <DialogTitle
                   as="h2"
                   className="text-base/7 font-semibold text-black"

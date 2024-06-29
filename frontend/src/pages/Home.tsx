@@ -7,6 +7,7 @@ import Checkbox from "../components/Checkbox";
 import ShowDetailModal from "../components/ShowDetailModal";
 import { axiosInstanceWithAuth } from "../api/Axios";
 import AddChecklistModal from "../components/AddChecklistModal";
+import { useCalendar } from "../context/CalendarContext";
 
 const feelingEmoji: { [key: string]: string } = {
   HAPPY: "😊",
@@ -31,12 +32,15 @@ interface ChecklistItem {
 }
 
 const Home: React.FC = () => {
+  const [date, setDate] = useState(new Date());
   const [feelings, setFeelings] = useState<Record<string, string>>({});
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [items, setItems] = useState<ChecklistItem[]>([]);
   const [aiRecommendation, setAiRecommendation] = useState("");
+  const { entryData, fetchCalendarData } = useCalendar();
+
 
   const handleToggle = async (id: number) => {
     const itemToUpdate = items.find((item) => item.id === id);
@@ -85,6 +89,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchChecklists();
+    fetchCalendarData();
   }, []);
 
   const tileContent = ({ date }: { date: Date }) => {
@@ -128,101 +133,34 @@ const Home: React.FC = () => {
     }
   };
 
-  // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
   const handleOpenDay = (value: Date) => {
-    axiosInstanceWithAuth
-      .get("/daily/", {
-        params: {
-          date: value,
-        },
-      })
-      .then((res) => {
-        setOpenShowDetails(true);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setDate(value);
+    setOpenShowDetails(true);
   };
 
   useEffect(() => {
-    const fetchCalendar = async () => {
-      try {
-        const response = await axiosInstanceWithAuth.get("/calendar/month", {
-          params: {
-            date: new Date(),
-          },
-        });
-
-        const data = response.data;
-
-        const feelingsData = data.reduce(
-          (
-            acc: Record<string, string>,
-            item: { year: number; month: number; day: number; mood: string },
-          ) => {
-            const date = new Date(
-              item.year,
-              item.month,
-              item.day,
-            ).toLocaleDateString();
-            acc[date] = item.mood;
-            return acc;
-          },
-          {},
-        );
-
-        setFeelings(feelingsData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     const fetchAll = async () => {
       await getAIRecommendation();
-      fetchCalendar();
+      fetchCalendarData();
     };
 
     fetchAll();
   }, []);
 
-  const handleViewChange = async ({
-    activeStartDate,
-  }: {
-    activeStartDate: Date | null;
-  }) => {
-    axiosInstanceWithAuth
-      .get("/calendar/month", {
-        params: {
-          date: activeStartDate,
-        },
-      })
-      .then((res) => {
-        const data = res.data;
-
-        const feelingsData = data.reduce(
-          (
-            acc: Record<string, string>,
-            item: { year: number; month: number; day: number; mood: string },
-          ) => {
-            const date = new Date(
-              item.year,
-              item.month,
-              item.day,
-            ).toLocaleDateString(); // Adjust month since it's 0-indexed
-            acc[date] = item.mood;
-            return acc;
-          },
-          {},
-        );
-
-        console.log(feelingsData);
-        setFeelings(feelingsData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  useEffect(() => {
+    const feelingsData = entryData.reduce(
+      (
+        acc: Record<string, string>,
+        item: { year: number; month: number; day: number; mood: string }
+      ) => {
+        const date = new Date(item.year, item.month + 1, item.day).toLocaleDateString();
+        acc[date] = item.mood;
+        return acc;
+      },
+      {}
+    );
+    setFeelings(feelingsData);
+  }, [entryData]); // Update feelings when entryData changes
 
   const getAIRecommendation = async () => {
     try {
@@ -245,6 +183,7 @@ const Home: React.FC = () => {
       <ShowDetailModal
         open={openShowDetails}
         close={() => setOpenShowDetails(false)}
+        date={date}
       />
       <AddChecklistModal
         open={openChecklist}
@@ -267,7 +206,6 @@ const Home: React.FC = () => {
                   onClickDay={handleOpenDay}
                   minDate={minDate}
                   maxDate={maxDate}
-                  onActiveStartDateChange={handleViewChange}
                 />
               </div>
             </div>

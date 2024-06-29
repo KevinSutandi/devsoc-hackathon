@@ -23,6 +23,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const fetchJournalData = async () => {
     try {
+      console.log("Fetching journal data");
       const response = await axiosInstanceWithAuth.post("/journals");
       setEntryData(response.data);
     } catch (error) {
