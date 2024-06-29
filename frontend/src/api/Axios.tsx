@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { BASE_URL } from "../utils/constants";
 
 const axiosInstanceWithAuth = axios.create({
-  baseURL: BASE_URL,
+  baseURL: '/api',
 });
 
 // Obtain the token
@@ -13,7 +13,6 @@ const getToken = () => {
 
 axiosInstanceWithAuth.interceptors.request.use((config) => {
   const token = getToken();
-  console.log(token)
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
