@@ -2,14 +2,12 @@ import React from "react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 
 interface CustomCheckboxProps {
-  id: string;
   checked: boolean;
   onChange: () => void;
   label: string;
 }
 
 const Checkbox: React.FC<CustomCheckboxProps> = ({
-  id,
   checked,
   onChange,
   label,
