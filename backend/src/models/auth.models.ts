@@ -43,6 +43,7 @@ export const dbGetJwtUserById = async (id: string): Promise<JwtUser> => {
             image: result.profile.image,
             createdAt: result.profile.createdAt,
             updatedAt: result.profile.updatedAt,
+            happinessPoints: result.profile.happinessPoints,
         };
     } catch (error) {
         throw error;
