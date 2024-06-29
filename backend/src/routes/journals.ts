@@ -7,18 +7,18 @@ import {
     dbGetJournalById,
     dbUpdateJournal,
 } from "../models/journals.models";
+import { CustomRequest } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const { uid } = req.body;
-
-        if (!uid) {
-            return res.status(400).send("Empty uid");
+        const customReq = req as CustomRequest;
+        if (!customReq.token || typeof customReq.token === "string") {
+            throw new Error("Token is not valid");
         }
 
-        const journals = await dbGetAllJournals(uid);
+        const journals = await dbGetAllJournals(customReq.token.uid);
         return res.send(journals);
     } catch (error) {
         console.error(error);
@@ -28,11 +28,11 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.post("/create", async (req: Request, res: Response) => {
     try {
-        const { uid, title, content, image } = req.body;
-
-        if (!uid) {
-            return res.status(400).send("Empty uid");
+        const customReq = req as CustomRequest;
+        if (!customReq.token || typeof customReq.token === "string") {
+            throw new Error("Token is not valid");
         }
+        const { title, content, image } = req.body;
 
         if (!title) {
             return res.status(400).send("Empty title");
@@ -42,7 +42,12 @@ router.post("/create", async (req: Request, res: Response) => {
             return res.status(400).send("Empty content");
         }
 
-        const journal = await dbCreateJournal(uid, title, content, image);
+        const journal = await dbCreateJournal(
+            customReq.token.uid,
+            title,
+            content,
+            image,
+        );
 
         return res.send(journal);
     } catch (error) {
