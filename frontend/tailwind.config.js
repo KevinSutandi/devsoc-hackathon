@@ -7,8 +7,8 @@ export default {
     extend: {
       keyframes: {
         fadeIn: {
-          "0%": { opacity: 0, transform: "scale(1)" },
-          "50%": { opacity: 0.5, transform: "scale(0.3)" },
+          "0%": { opacity: 0, transform: "scale(0)" },
+          "50%": { opacity: 0.5, transform: "scale(1.5)" },
           "100%": { opacity: 1, transform: "scale(1)" },
         },
       },
