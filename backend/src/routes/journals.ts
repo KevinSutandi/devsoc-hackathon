@@ -2,6 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 import {
     dbCreateJournal,
+    dbDeleteJournal,
     dbGetAllJournals,
     dbGetJournalById,
     dbUpdateJournal,
@@ -9,9 +10,9 @@ import {
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
     try {
-        const uid = req.params.uid;
+        const { uid } = req.body;
 
         if (!uid) {
             return res.status(400).send("Empty uid");
@@ -25,7 +26,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/create", async (req: Request, res: Response) => {
     try {
         const { uid, title, content, image } = req.body;
 
@@ -67,7 +68,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-router.put(":/id", async (req: Request, res: Response) => {
+router.put("/:id", async (req: Request, res: Response) => {
     try {
         const journalId = parseInt(req.params.id);
         const { title, content, image } = req.body;
@@ -101,6 +102,8 @@ router.delete("/:id", async (req: Request, res: Response) => {
         if (!currJournal) {
             return res.status(404).send("No journal found");
         }
+
+        await dbDeleteJournal(journalId);
 
         return res.send("Deletion successful");
     } catch (error) {
