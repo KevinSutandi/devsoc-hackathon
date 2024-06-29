@@ -2,7 +2,7 @@ import { FormEvent, ChangeEvent, useState, useEffect } from "react";
 import "flowbite/dist/flowbite.min.css";
 import { axiosInstanceWithAuth } from "../api/Axios";
 import ButtonLoading from "../components/ButtonLoading";
-import 'flowbite/dist/flowbite.min.css'; 
+import 'flowbite/dist/flowbite.min.css';
 
 export default function Profile() {
   // const profileTemp = {
@@ -82,7 +82,7 @@ export default function Profile() {
   const handleSaveEditProfile = async (e: FormEvent) => {
     e.preventDefault();
     try {
-    setLoading(true);
+      setLoading(true);
       const response = await axiosInstanceWithAuth.put(
         "/profile/update-profile",
         editProfileInfo,
