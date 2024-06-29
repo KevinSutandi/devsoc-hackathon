@@ -1,39 +1,108 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import JournalEntry from '../components/JournalEntry';
+import { useJournal } from '../context/JournalContext';
 
-interface JournalEntryData {
-	date: Date;
-	text: string;
-}
+const groupByMonth = (entries: Array<{ createdAt: string; content: string; title: string; }>) => {
+  const groupedEntries: { [key: string]: Array<{ createdAt: string; content: string; title: string; }> } = {};
 
-const STUB_TEXT_SHORT = 'Today was a mix of productivity and relaxation. I spent the morning working on my customer data analysis project. It\'s fascinating to see the patterns emerge as I dive deeper into the variables influencing churn rates. In the afternoon, I took a break and went for a long walk in the park. The fresh air and sunshine were just what I needed to recharge. Looking forward to continuing my work tomorrow with a fresh perspective.';
-const STUB_TEXT_MED = 'Today started off with a productive work session. I\'m analyzing customer churn data for a telecommunications company, and it\'s been interesting to see how factors like monthly revenue, overage minutes, and credit ratings play into customer retention. I feel like I\'m starting to get a clearer picture of the key drivers of churn, which is exciting. After a solid few hours of work, I decided to take a break and enjoy the beautiful weather. I went for a long walk in the park and even brought a book with me to read on one of the benches. The combination of sunshine and a good story was incredibly refreshing. In the evening, I met up with some friends for dinner. We had a great time catching up and sharing stories. It\'s always nice to unwind with good company after a day of deep focus. Tomorrow, I\'ll dive back into the data, hopefully with some new insights from today\'s reflections.';
-const STUB_TEXT_LONG = 'Today was quite fulfilling and balanced. My morning began with diving into the customer churn analysis project I\'ve been working on for the telecommunications company. It\'s a complex but rewarding task. I\'m focusing on variables like monthly revenue, monthly minutes, total recurring charges, and various customer demographics. It\'s intriguing to see how each factor correlates with churn rates. For instance, higher overage minutes seem to be a significant predictor of churn, which aligns with the hypothesis that unexpected charges lead to customer dissatisfaction. Mid-morning, I took a short break and made myself a cup of coffee. I find that stepping away from the screen for a few minutes helps clear my mind and often leads to new insights. After my break, I returned to my analysis with renewed focus and noticed some interesting patterns related to customer income groups and credit ratings. These findings could be crucial for developing targeted retention strategies. In the early afternoon, I decided to step outside and enjoy the beautiful weather. I went for a long walk in the park near my home. The fresh air and the vibrant green of the trees were incredibly refreshing. I brought along a book I\'ve been reading about the impact of technology on modern communication, which provided a nice contrast to my data-heavy morning. Sitting on a park bench, engrossed in the book, I felt a deep sense of calm. Returning home, I spent some time jotting down thoughts and ideas that had come to me during the walk. Sometimes, a change of scenery can spark creativity and lead to breakthroughs. I made a few notes on potential new angles to explore in my analysis, including the impact of service areas on customer churn. In the evening, I met up with friends for dinner at a cozy little restaurant downtown. It was wonderful to catch up and hear what everyone has been up to. We talked about everything from work to weekend plans, and the conversation was filled with laughter and good vibes. It\'s always refreshing to connect with friends and share experiences. After dinner, I headed home and spent a bit more time reviewing my notes from earlier in the day. I feel like I\'m on the verge of uncovering some significant insights that could really help the company improve their customer retention strategies. Overall, today was a great mix of productivity, relaxation, and social interaction. I\'m looking forward to seeing where my analysis leads tomorrow and how I can continue to refine my approach.';
+  entries.forEach(entry => {
+    const date = new Date(entry.createdAt);
+		var extractedMonth = date.getMonth() + 1;
+		var month = 'January';
+		switch (extractedMonth) {
+			case extractedMonth = 1: {
+				month = 'January';
+				break;
+			}
+			case extractedMonth = 2: {
+				month = 'February';
+				break;
+			}
+			case extractedMonth = 3: {
+				month = 'March';
+				break;
+			}
+			case extractedMonth = 4: {
+				month = 'April';
+				break;
+			}
+			case extractedMonth = 5: {
+				month = 'May';
+				break;
+			}
+			case extractedMonth = 6: {
+				month = 'June';
+				break;
+			}
+			case extractedMonth = 7: {
+				month = 'July';
+				break;
+			}
+			case extractedMonth = 8: {
+				month = 'August';
+				break;
+			}
+			case extractedMonth = 9: {
+				month = 'September';
+				break;
+			}
+			case extractedMonth = 10: {
+				month = 'October';
+				break;
+			}
+			case extractedMonth = 11: {
+				month = 'November';
+				break;
+			}
+			case extractedMonth = 12: {
+				month = 'December';
+				break;
+			}
+			default: {
+				month = date.getFullYear().toString();
+				break;
+			}
+		}
+    const monthYear = `${month} ${date.getFullYear()}`; 
 
-// TODO: Add monthly dividers
+    if (!groupedEntries[monthYear]) {
+      groupedEntries[monthYear] = [];
+    }
+
+    groupedEntries[monthYear].push(entry);
+  });
+
+  return groupedEntries;
+};
 
 const Journal: React.FC = () => {
-	const data = new Array<JournalEntryData>();
-	for (let i = 0; i < 6; i++) {
-		const temp: JournalEntryData = {
-			date: new Date(`2024-06-${28 - i}`),
-			text: STUB_TEXT_MED
-		}
-		if (i === 3) temp.text = STUB_TEXT_SHORT;
-		if (i === 5) temp.text = STUB_TEXT_LONG;
-		data.push(temp);
-	}
-	return (
-		<div className='p-5'>
-			<div className='p-2 w-full rounded-2xl h-full'>
-				<h1 className='text-4xl font-bold my-5'>Journal</h1>
-				{data.map(data => (
-					<div>
-						<JournalEntry date={data.date} text={data.text} />
+	const { entryData, fetchJournalData } = useJournal();
+
+	useEffect(() => {
+		fetchJournalData();
+	}, [])
+
+	const groupedEntries = groupByMonth(entryData);
+
+  return (
+	<div className='p-5'>
+		<div className='p-2 w-full rounded-2xl h-full'>	
+			<h1 className='text-4xl font-bold my-5'>Journal</h1>
+			<div className='flex flex-col-reverse'>
+				{Object.keys(groupedEntries).map(monthYear => (
+					<div key={monthYear}>
+						<div className='flex align-middle justify-center text-center'>
+							<div className='text-lg my-2 w-1/4'>{monthYear}</div>
+							<div className='border-slate-200 border-2 rounded-md h-[1px] w-full my-auto mx-4'></div>
+						</div>
+						{groupedEntries[monthYear].map((data, index) => (
+							<JournalEntry key={index} date={data.createdAt} text={data.content} title={data.title} />
+						))}
 					</div>
 				))}
 			</div>
 		</div>
+	</div>
 	);
 };
 

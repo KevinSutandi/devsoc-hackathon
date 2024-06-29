@@ -6,6 +6,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import Checkbox from "../components/Checkbox";
 import ShowDetailModal from "../components/ShowDetailModal";
 import { axiosInstanceWithAuth } from "../api/Axios";
+import AddChecklistModal from "../components/AddChecklistModal";
 
 const feelingEmoji: { [key: string]: string } = {
   HAPPY: "😊",
@@ -25,6 +26,10 @@ interface ChecklistItem {
 const Home: React.FC = () => {
   // const [emoji, setEmoji] = useState<string>("");
   const [feelings, setFeelings] = useState<Record<string, string>>({});
+  // const [emoji, setEmoji] = useState<string>("");
+  const [openChecklist, setOpenChecklist] = useState<boolean>(false);
+  const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
   const [items, setItems] = useState<ChecklistItem[]>([
     {
       id: "1",
@@ -47,7 +52,6 @@ const Home: React.FC = () => {
     { id: "8", label: "Review code", checked: false },
     { id: "9", label: "Deploy to production", checked: false },
   ]);
-  const [open, setOpen] = useState<boolean>(false);
 
 
   const handleToggle = (id: string) => {
@@ -80,22 +84,30 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleOpenDay = (value: Date) => {
-    // Get the details from the backend 
-    // and display them in the right panel
+  const handleAddNewTask = () => {
+    const newTask: ChecklistItem = {
+      id: (items.length + 1).toString(),
+      label: value,
+      checked: false,
+    };
+    setItems((prevItems) => [...prevItems, newTask]);
+    setValue(""); // Clear the input after adding the task
+    setOpenChecklist(false); // Close the modal or input section
+  };
 
+  // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
+  const handleOpenDay = (value: Date) => {
     axiosInstanceWithAuth.get('/api/daily/', {
       params: {
         date: value
       }
     }).then((res) => {
-      setOpen(true);
+      setOpenShowDetails(true);
       console.log(res.data)
 
     }).catch((err) => {
       console.log(err)
     })
-    setOpen(true);
   }
 
   const handleViewChange = async ({ activeStartDate }: { action: string, activeStartDate: Date | null }) => {
@@ -127,7 +139,15 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <ShowDetailModal open={open} close={() => setOpen(false)} />
+      <ShowDetailModal open={openShowDetails} close={() => setOpenShowDetails(false)} />
+      <AddChecklistModal
+        open={openChecklist}
+        close={handleAddNewTask}
+        title="What task are you working on today?"
+        multiline={false}
+        value={value}
+        setValue={setValue}
+      />
       <div className="p-20 border-2 h-screen">
         <h1 className="text-4xl">Mood Calendar</h1>
         <div className="h-[65%] mt-[3%] w-[90%]">
