@@ -281,7 +281,7 @@ const Home: React.FC = () => {
 
         <div className="bg-red-300 mt-5 rounded-2xl px-5 py-3">
           <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full flex">
-            How are you feeling today?
+            Sentiment Analysis by Gemini AI
           </h2>
           <div>{aiRecommendation}</div>
         </div>
