@@ -192,7 +192,7 @@ const Home: React.FC = () => {
 
   const getAIRecommendation = async () => {
     try {
-      const res = await axiosInstanceWithAuth.get("/ai");
+      const res = await axiosInstanceWithAuth.post("/ai");
 
       const data = res.data;
       setAiRecommendation(data);
@@ -279,7 +279,7 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-red-300 h-48 mt-5 rounded-2xl px-5 py-3">
+        <div className="bg-red-300 mt-5 rounded-2xl px-5 py-3">
           <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full flex">
             How are you feeling today?
           </h2>
