@@ -21,6 +21,12 @@ function App() {
       location.pathname !== "/register"
     ) {
       navigate("/login");
+      // Redirect to the dashboard if token exists
+    } else if (
+      cookies &&
+      (location.pathname === "/login" || location.pathname === "/register")
+    ) {
+      navigate("/");
     }
   }, [navigate, location]);
 
