@@ -7,7 +7,6 @@ import {
     dbGetTodoById,
     dbUpdateTodo,
 } from "../models/todo.models";
-import e from "express";
 
 const router = express.Router();
 
