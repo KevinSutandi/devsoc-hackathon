@@ -7,7 +7,6 @@ import {
     dbGetTodoById,
     dbUpdateTodo,
 } from "../models/todo.models";
-import e from "express";
 
 const router = express.Router();
 
@@ -97,3 +96,5 @@ router.delete("/delete", async (req, res) => {
         return res.status(500).send("internal server err");
     }
 });
+
+export default router;
