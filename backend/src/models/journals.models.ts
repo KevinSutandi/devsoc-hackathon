@@ -37,3 +37,7 @@ export const dbUpdateJournal = async (
         },
     });
 };
+
+export const dbDeleteJournal = async (id: number) => {
+    return await prisma.journal.delete({ where: { id: id } });
+};

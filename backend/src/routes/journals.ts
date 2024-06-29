@@ -91,4 +91,21 @@ router.put(":/id", async (req: Request, res: Response) => {
         return res.status(500).send(`Server error: ${error}`);
     }
 });
+
+router.delete("/:id", async (req: Request, res: Response) => {
+    try {
+        const journalId = parseInt(req.params.id);
+
+        const currJournal = await dbGetJournalById(journalId);
+
+        if (!currJournal) {
+            return res.status(404).send("No journal found");
+        }
+
+        return res.send("Deletion successful");
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(`Server error: ${error}`);
+    }
+});
 export default router;
