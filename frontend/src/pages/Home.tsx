@@ -119,6 +119,16 @@ const Home: React.FC = () => {
     setOpenChecklist(false); // Close the modal or input section
   };
 
+  const handleDeleteTask = async (id: number) => {
+    try {
+      const res = await axiosInstanceWithAuth.post("/todo/delete", { id });
+      console.log(res);
+      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
   const handleOpenDay = (value: Date) => {
     axiosInstanceWithAuth
@@ -248,6 +258,7 @@ const Home: React.FC = () => {
                         checked={item.check}
                         label={item.note}
                         onChange={() => handleToggle(item.id)}
+                        onDelete={() => handleDeleteTask(item.id)}
                       />
                     </div>
                   ))}

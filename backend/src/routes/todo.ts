@@ -72,7 +72,7 @@ router.put("/update", async (req, res) => {
     }
 });
 
-router.delete("/delete", async (req, res) => {
+router.post("/delete", async (req, res) => {
     try {
         const customReq = req as CustomRequest;
         if (!customReq.token || typeof customReq.token === "string") {
