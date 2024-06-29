@@ -31,6 +31,7 @@ model Profile {
   updatedAt DateTime   @updatedAt
   Journal   Journal[]
   calendar  Calendar[]
+  todo      Todo[]
 }
 
 model Journal {
@@ -64,4 +65,12 @@ model Calendar {
   mood    Mood
 
   @@unique(name: "uniqueDate", [uid, day, month, year])
+}
+
+model Todo {
+  id         Int     @id @default(autoincrement())
+  author     Profile @relation(fields: [profileUid], references: [uid])
+  profileUid String
+  check      Boolean
+  note       String
 }
