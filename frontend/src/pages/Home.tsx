@@ -28,11 +28,11 @@ const Home: React.FC = () => {
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
+  const [aiRecommendation, setAiRecommendation] = useState("");
   const [items, setItems] = useState<ChecklistItem[]>([
     {
       id: "1",
-      label:
-        "Complete project",
+      label: "Complete project",
       checked: false,
     },
     { id: "2", label: "Review code", checked: false },
@@ -50,7 +50,6 @@ const Home: React.FC = () => {
     { id: "8", label: "Review code", checked: false },
     { id: "9", label: "Deploy to production", checked: false },
   ]);
-
 
   const handleToggle = (id: string) => {
     setItems((prevItems) =>
@@ -89,59 +88,110 @@ const Home: React.FC = () => {
 
   // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
   const handleOpenDay = (value: Date) => {
-    axiosInstanceWithAuth.get('/daily/', {
-      params: {
-        date: value
-      }
-    }).then((res) => {
-      setOpenShowDetails(true);
-      console.log(res.data)
-
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    axiosInstanceWithAuth
+      .get("/daily/", {
+        params: {
+          date: value,
+        },
+      })
+      .then((res) => {
+        setOpenShowDetails(true);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-    axiosInstanceWithAuth.get('/calendar/month', {
-      params: {
-        date: new Date()
+    const fetchCalendar = async () => {
+      try {
+        const response = await axiosInstanceWithAuth.get("/calendar/month", {
+          params: {
+            date: new Date(),
+          },
+        });
+
+        const data = response.data;
+
+        const feelingsData = data.reduce(
+          (
+            acc: Record<string, string>,
+            item: { year: number; month: number; day: number; mood: string },
+          ) => {
+            const date = new Date(
+              item.year,
+              item.month,
+              item.day,
+            ).toLocaleDateString();
+            acc[date] = item.mood;
+            return acc;
+          },
+          {},
+        );
+
+        setFeelings(feelingsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    }).then((res) => {
+    };
+
+    const fetchAll = async () => {
+      await getAIRecommendation();
+      fetchCalendar();
+    };
+
+    fetchAll();
+  }, []);
+
+  const handleViewChange = async ({
+    activeStartDate,
+  }: {
+    activeStartDate: Date | null;
+  }) => {
+    axiosInstanceWithAuth
+      .get("/calendar/month", {
+        params: {
+          date: activeStartDate,
+        },
+      })
+      .then((res) => {
+        const data = res.data;
+
+        const feelingsData = data.reduce(
+          (
+            acc: Record<string, string>,
+            item: { year: number; month: number; day: number; mood: string },
+          ) => {
+            const date = new Date(
+              item.year,
+              item.month,
+              item.day,
+            ).toLocaleDateString(); // Adjust month since it's 0-indexed
+            acc[date] = item.mood;
+            return acc;
+          },
+          {},
+        );
+
+        console.log(feelingsData);
+        setFeelings(feelingsData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getAIRecommendation = async () => {
+    try {
+      const res = await axiosInstanceWithAuth.post("/ai");
+
       const data = res.data;
-
-      const feelingsData = data.reduce((acc: Record<string, string>, item: { year: number; month: number; day: number; mood: string; }) => {
-        const date = new Date(item.year, item.month, item.day).toLocaleDateString();
-        acc[date] = item.mood;
-        return acc;
-      }, {});
-
-      setFeelings(feelingsData)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }, [])
-
-  const handleViewChange = async ({ activeStartDate }: { activeStartDate: Date | null }) => {
-    axiosInstanceWithAuth.get('/calendar/month', {
-      params: {
-        date: activeStartDate
-      }
-    }).then((res) => {
-      const data = res.data;
-
-      const feelingsData = data.reduce((acc: Record<string, string>, item: { year: number; month: number; day: number; mood: string; }) => {
-        const date = new Date(item.year, item.month, item.day).toLocaleDateString(); // Adjust month since it's 0-indexed
-        acc[date] = item.mood;
-        return acc;
-      }, {});
-
-      console.log(feelingsData)
-      setFeelings(feelingsData)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+      setAiRecommendation(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // mindate is Jan 1, 2024
   const minDate = new Date(2024, 0, 1);
@@ -150,7 +200,10 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <ShowDetailModal open={openShowDetails} close={() => setOpenShowDetails(false)} />
+      <ShowDetailModal
+        open={openShowDetails}
+        close={() => setOpenShowDetails(false)}
+      />
       <AddChecklistModal
         open={openChecklist}
         close={handleAddNewTask}
@@ -166,7 +219,14 @@ const Home: React.FC = () => {
             <div className="md:w-[70%] w-full flex justify-center items-center mr-[1.5%] rounded-2xl bg-indigo-50 shadow-md">
               <div>
                 {/* Make it disabled for yesterday and above */}
-                <Calendar className="p-1" tileContent={tileContent} onClickDay={handleOpenDay} minDate={minDate} maxDate={maxDate} onActiveStartDateChange={handleViewChange} />
+                <Calendar
+                  className="p-1"
+                  tileContent={tileContent}
+                  onClickDay={handleOpenDay}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  onActiveStartDateChange={handleViewChange}
+                />
               </div>
             </div>
 
@@ -209,6 +269,13 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="bg-red-300 mt-5 rounded-2xl px-5 py-3">
+          <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full flex">
+            Sentiment Analysis by Gemini AI
+          </h2>
+          <div>{aiRecommendation}</div>
         </div>
       </div>
     </>
