@@ -4,18 +4,36 @@ import {
   HomeIcon,
   BookOpenIcon,
   TrophyIcon,
+  Bars3Icon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import ButtonAddEvent from "./ButtonAddEvent";
-
 import { useState } from "react";
 import NewEntryModal from "./NewEntryModal";
+import { useModal } from "../context/ModalContext";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const { isModalOpen, openCloseModal } = useModal();
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   return (
     <>
-      <NewEntryModal open={open} close={() => setOpen(false)} />
-      <div className="fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl rounded-r-xl pt-10">
+      <NewEntryModal open={isModalOpen} close={openCloseModal} />
+      {/* Toggle Button for Mobile */}
+      <div className="fixed top-4 left-4 lg:hidden z-50 w-64">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+          {sidebarOpen ? (
+            <XMarkIcon className="w-8 h-8" />
+          ) : (
+            <Bars3Icon className="w-8 h-8" />
+          )}
+        </button>
+      </div>
+      {/* Sidebar */}
+      <div
+        className={`fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl pt-10 transform transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 z-40`}
+      >
         <div className="flex flex-col w-full items-center gap-1">
           <div className="text-center font-extralight py-4 text-2xl tracking-wide">
             Mental <br /> Aquarium
@@ -34,11 +52,18 @@ const Sidebar = () => {
             Icon={<TrophyIcon />}
           />
           <div className="flex justify-center w-full mt-8">
-            <ButtonAddEvent open={open} setOpen={setOpen} />
+            <ButtonAddEvent open={isModalOpen} setOpen={openCloseModal} />
           </div>
         </div>
         <Profile />
       </div>
+      {/* Overlay for Mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-30"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </>
   );
 };

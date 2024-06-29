@@ -11,6 +11,12 @@ export const dbGetTopHappiness = async () => {
     });
 };
 
+export const dbGetAllHappiness = async () => {
+    return await prisma.profile.findMany({
+        orderBy: { happinessPoints: "desc" },
+    });
+};
+
 export const dbGetMyHapiness = async (uid: string) => {
     const allProfiles = await prisma.profile.findMany({
         orderBy: { happinessPoints: "desc" },

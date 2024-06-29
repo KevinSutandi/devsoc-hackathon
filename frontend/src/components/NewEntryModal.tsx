@@ -12,22 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { newEntrySchema } from "../utils/journal.schema";
 import { z } from "zod";
 import { useJournal } from "../context/JournalContext";
+import ButtonEmoji from "./ButtonEmoji";
+import { useEmoji } from "../context/EmojiContext";
 
 type NewEntryProps = z.infer<typeof newEntrySchema>;
 
-export default function MyModal({
-  open,
-  close,
-}: {
-  open: boolean;
-  close: () => void;
-}) {
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+export default function MyModal({ open, close }: { open: boolean; close: () => void; }) {
+  const { register, setValue, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(newEntrySchema),
     defaultValues: {
       title: "",
@@ -35,14 +26,33 @@ export default function MyModal({
     },
   });
 
+  const feelingEmoji: { [key: string]: string } = {
+    happy: "😊",
+    neutral: "😐",
+    sad: "😕",
+    angry: "😡",
+    worried: "😰",
+    laughing: "😂",
+  };
+
+  const emojiToString: { [key: string]: string } = {
+    "😊": 'HAPPY',
+    "😐": 'NEUTRAL',
+    "😕": 'SAD',
+    "😡": 'ANGRY',
+    "😰": 'WORRIED',
+    "😂": 'LAUGHING',
+  };
+
   const { fetchJournalData } = useJournal();
 
+  const { currentEmoji } = useEmoji();
   const onSubmit = async (data: NewEntryProps) => {
     try {
-      const response = await axiosInstanceWithAuth.post("/journals/create", {
+      const response = await axiosInstanceWithAuth.post("/daily/create", {
         title: data.title,
         content: data.content,
-        image: "",
+        mood: emojiToString[currentEmoji],
         date: new Date(),
       });
       console.log(response);
@@ -60,7 +70,7 @@ export default function MyModal({
       <Dialog
         open={open}
         as="div"
-        className="relative z-10 focus:outline-none transition duration-150 ease-out"
+        className="relative z-[100] focus:outline-none transition duration-150 ease-out"
         transition
         onClose={close}
       >
@@ -89,6 +99,22 @@ export default function MyModal({
                 {errors.title && (
                   <p className="text-red-600 text-sm">{errors.title.message}</p>
                 )}
+                <DialogTitle
+                  as="h2"
+                  className="text-base/7 font-semibold text-black"
+                >
+                  How are you feeling today?
+                </DialogTitle>
+                <div className="mt-1 grid grid-cols-3 gap-x-5 space-y-3 w-full h-3/4 justify-center items-center pb-4">
+                  {Object.keys(feelingEmoji).map((key) => (
+                    <ButtonEmoji
+                      key={key}
+                      emoji={feelingEmoji[key]}
+                      onClick={() => {}}
+                      modalMode={true}
+                    />
+                  ))}
+                </div>  
                 <DialogTitle
                   as="h2"
                   className="text-base/7 font-semibold text-black"

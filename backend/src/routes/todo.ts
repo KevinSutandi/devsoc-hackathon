@@ -26,7 +26,7 @@ router.get("/all", async (req, res) => {
     }
 });
 
-router.get("/create", async (req, res) => {
+router.post("/create", async (req, res) => {
     try {
         const customReq = req as CustomRequest;
         if (!customReq.token || typeof customReq.token === "string") {
