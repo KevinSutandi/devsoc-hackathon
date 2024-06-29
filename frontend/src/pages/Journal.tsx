@@ -3,12 +3,12 @@ import JournalEntry from '../components/JournalEntry';
 import { useJournal } from '../context/JournalContext';
 
 const groupByMonth = (entries: Array<{ createdAt: string; content: string; title: string; }>) => {
-  const groupedEntries: { [key: string]: Array<{ createdAt: string; content: string; title: string; }> } = {};
+	const groupedEntries: { [key: string]: Array<{ createdAt: string; content: string; title: string; }> } = {};
 
-  entries.forEach(entry => {
-    const date = new Date(entry.createdAt);
-		var extractedMonth = date.getMonth() + 1;
-		var month = 'January';
+	entries.forEach(entry => {
+		const date = new Date(entry.createdAt);
+		let extractedMonth = date.getMonth() + 1;
+		let month = 'January';
 		switch (extractedMonth) {
 			case extractedMonth = 1: {
 				month = 'January';
@@ -63,16 +63,16 @@ const groupByMonth = (entries: Array<{ createdAt: string; content: string; title
 				break;
 			}
 		}
-    const monthYear = `${month} ${date.getFullYear()}`; 
+		const monthYear = `${month} ${date.getFullYear()}`;
 
-    if (!groupedEntries[monthYear]) {
-      groupedEntries[monthYear] = [];
-    }
+		if (!groupedEntries[monthYear]) {
+			groupedEntries[monthYear] = [];
+		}
 
-    groupedEntries[monthYear].push(entry);
-  });
+		groupedEntries[monthYear].push(entry);
+	});
 
-  return groupedEntries;
+	return groupedEntries;
 };
 
 const Journal: React.FC = () => {
@@ -84,25 +84,25 @@ const Journal: React.FC = () => {
 
 	const groupedEntries = groupByMonth(entryData);
 
-  return (
-	<div className='p-5'>
-		<div className='p-2 w-full rounded-2xl h-full'>	
-			<h1 className='text-4xl font-bold my-5'>Journal</h1>
-			<div className='flex flex-col-reverse'>
-				{Object.keys(groupedEntries).map(monthYear => (
-					<div key={monthYear}>
-						<div className='flex align-middle justify-center text-center'>
-							<div className='text-lg my-2 w-1/4'>{monthYear}</div>
-							<div className='border-slate-200 border-2 rounded-md h-[1px] w-full my-auto mx-4'></div>
+	return (
+		<div className='p-5'>
+			<div className='p-2 w-full rounded-2xl h-full'>
+				<h1 className='text-4xl font-bold my-5'>Journal</h1>
+				<div className='flex flex-col-reverse'>
+					{Object.keys(groupedEntries).map(monthYear => (
+						<div key={monthYear}>
+							<div className='flex align-middle justify-center text-center'>
+								<div className='text-lg my-2 w-1/4'>{monthYear}</div>
+								<div className='border-slate-200 border-2 rounded-md h-[1px] w-full my-auto mx-4'></div>
+							</div>
+							{groupedEntries[monthYear].map((data, index) => (
+								<JournalEntry key={index} date={data.createdAt} text={data.content} title={data.title} />
+							))}
 						</div>
-						{groupedEntries[monthYear].map((data, index) => (
-							<JournalEntry key={index} date={data.createdAt} text={data.content} title={data.title} />
-						))}
-					</div>
-				))}
+					))}
+				</div>
 			</div>
 		</div>
-	</div>
 	);
 };
 

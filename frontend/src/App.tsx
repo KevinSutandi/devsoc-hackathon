@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { JournalProvider } from "./context/JournalContext";
+import { ModalProvider } from "./context/ModalContext";
+import { EmojiProvider } from "./context/EmojiContext";
 
 function App() {
   const navigate = useNavigate();
@@ -32,6 +34,8 @@ function App() {
   }, [navigate, location]);
 
   return (
+    <EmojiProvider>
+    <ModalProvider>
     <JournalProvider>
       <Routes>
         <Route element={<SidebarLayout />}>
@@ -42,6 +46,8 @@ function App() {
         <Route path="/register" element={<Register />} />
       </Routes>
     </JournalProvider>
+    </ModalProvider>
+    </EmojiProvider>
   );
 }
 

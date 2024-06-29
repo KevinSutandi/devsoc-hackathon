@@ -31,13 +31,12 @@ interface ChecklistItem {
 }
 
 const Home: React.FC = () => {
-  // const [emoji, setEmoji] = useState<string>("");
   const [feelings, setFeelings] = useState<Record<string, string>>({});
-  // const [emoji, setEmoji] = useState<string>("");
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [items, setItems] = useState<ChecklistItem[]>([]);
+  const [aiRecommendation, setAiRecommendation] = useState("");
 
   const handleToggle = async (id: number) => {
     const itemToUpdate = items.find((item) => item.id === id);
@@ -132,7 +131,7 @@ const Home: React.FC = () => {
   // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
   const handleOpenDay = (value: Date) => {
     axiosInstanceWithAuth
-      .get("/api/daily/", {
+      .get("/daily/", {
         params: {
           date: value,
         },
@@ -146,15 +145,54 @@ const Home: React.FC = () => {
       });
   };
 
+  useEffect(() => {
+    const fetchCalendar = async () => {
+      try {
+        const response = await axiosInstanceWithAuth.get("/calendar/month", {
+          params: {
+            date: new Date(),
+          },
+        });
+
+        const data = response.data;
+
+        const feelingsData = data.reduce(
+          (
+            acc: Record<string, string>,
+            item: { year: number; month: number; day: number; mood: string },
+          ) => {
+            const date = new Date(
+              item.year,
+              item.month,
+              item.day,
+            ).toLocaleDateString();
+            acc[date] = item.mood;
+            return acc;
+          },
+          {},
+        );
+
+        setFeelings(feelingsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const fetchAll = async () => {
+      await getAIRecommendation();
+      fetchCalendar();
+    };
+
+    fetchAll();
+  }, []);
+
   const handleViewChange = async ({
     activeStartDate,
   }: {
-    action: string;
     activeStartDate: Date | null;
   }) => {
-    console.log(activeStartDate);
     axiosInstanceWithAuth
-      .get("/api/calendar/month", {
+      .get("/calendar/month", {
         params: {
           date: activeStartDate,
         },
@@ -186,6 +224,17 @@ const Home: React.FC = () => {
       });
   };
 
+  const getAIRecommendation = async () => {
+    try {
+      const res = await axiosInstanceWithAuth.post("/ai");
+
+      const data = res.data;
+      setAiRecommendation(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // mindate is Jan 1, 2024
   const minDate = new Date(2024, 0, 1);
   // maxdate is today
@@ -205,15 +254,15 @@ const Home: React.FC = () => {
         value={value}
         setValue={setValue}
       />
-      <div className="p-20 border-2 h-screen">
-        <h1 className="text-4xl">Mood Calendar</h1>
-        <div className="h-[65%] mt-[3%] w-[90%]">
-          <div className="flex h-full">
-            <div className="w-[70%] flex justify-center items-center mr-[1.5%] rounded-2xl bg-indigo-50 shadow-md">
+      <div className="md:p-20 p-16 py-10 md:h-screen h-full">
+        <h1 className="text-4xl mb-5">Mood Calendar</h1>
+        <div className="md:h-[75%]">
+          <div className="flex h-full md:flex-row flex-col">
+            <div className="md:w-[70%] w-full flex justify-center items-center mr-[1.5%] rounded-2xl bg-indigo-50 shadow-md">
               <div>
                 {/* Make it disabled for yesterday and above */}
                 <Calendar
-                  className="p-5"
+                  className="p-1"
                   tileContent={tileContent}
                   onClickDay={handleOpenDay}
                   minDate={minDate}
@@ -223,13 +272,13 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-[30%] flex flex-col justify-center items-center gap-y-[3%]">
-              <div className="flex-1 w-full flex flex-col rounded-2xl items-center bg-green-50 shadow-md h-[40%]">
-                <h2 className="text-lg font-semibold w-full h-[25%] self flex justify-center pt-[7%]">
+            <div className="md:w-[30%] md:h-full w-full mt-10 md:mt-0 flex flex-col justify-center items-center md:gap-4 gap-4">
+              <div className="w-full h-full flex flex-col rounded-2xl items-center bg-green-50 shadow-md">
+                <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full self flex justify-center pt-[7%]">
                   How are you feeling today?
                 </h2>
 
-                <div className="mt-1 grid grid-cols-3 gap-x-5 space-y-3 w-full h-3/4 justify-center items-center pb-4">
+                <div className="mt-1 grid grid-cols-3 gap-x-5 w-full h-3/4 justify-center items-center pb-4">
                   {Object.keys(feelingEmoji).map((key) => (
                     <ButtonEmoji
                       key={key}
@@ -240,8 +289,8 @@ const Home: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex-1 w-full h-[60%] flex flex-col rounded-2xl bg-yellow-50 shadow-md">
-                <div className="w-full h-[25%] self flex justify-between items-center px-[9%] py-[7%]">
+              <div className="w-full h-1/2 flex flex-col rounded-2xl bg-yellow-50 shadow-md">
+                <div className="w-full p-5 flex justify-between items-center">
                   <h2 className="text-lg font-semibold">Today's Checklist</h2>
                   <button
                     onClick={() => setOpenChecklist(!openChecklist)}
@@ -266,6 +315,13 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="bg-red-300 mt-5 rounded-2xl px-5 py-3">
+          <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full flex">
+            Sentiment Analysis by Gemini AI
+          </h2>
+          <div>{aiRecommendation}</div>
         </div>
       </div>
     </>
