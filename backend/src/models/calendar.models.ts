@@ -41,3 +41,18 @@ export const dbGetMonthByUid = async (uid: string, date: Date) => {
         },
     });
 };
+
+export const dbGetCalandarByDate = async (uid: string, date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDay();
+
+    return await prisma.calendar.findFirst({
+        where: {
+            uid,
+            year,
+            month,
+            day,
+        },
+    });
+};

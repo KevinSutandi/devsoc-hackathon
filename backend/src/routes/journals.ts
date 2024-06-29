@@ -31,7 +31,7 @@ router.post("/create", async (req: Request, res: Response) => {
         if (!customReq.token || typeof customReq.token === "string") {
             throw new Error("Token is not valid");
         }
-        const { title, content, image } = req.body;
+        const { title, content, image, date } = req.body;
 
         if (!title) {
             return res.status(400).send("Empty title");
@@ -46,6 +46,7 @@ router.post("/create", async (req: Request, res: Response) => {
             title,
             content,
             image,
+            date,
         );
         return res.send(journal);
     } catch (error) {
