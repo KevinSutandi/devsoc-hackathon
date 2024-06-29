@@ -3,7 +3,7 @@ import JournalEntry from '../components/JournalEntry';
 
 interface JournalEntryData {
 	date: Date;
-	text: String;
+	text: string;
 }
 
 const STUB_TEXT_SHORT = 'Today was a mix of productivity and relaxation. I spent the morning working on my customer data analysis project. It\'s fascinating to see the patterns emerge as I dive deeper into the variables influencing churn rates. In the afternoon, I took a break and went for a long walk in the park. The fresh air and sunshine were just what I needed to recharge. Looking forward to continuing my work tomorrow with a fresh perspective.';
@@ -16,25 +16,25 @@ const Journal: React.FC = () => {
 	const data = new Array<JournalEntryData>();
 	for (let i = 0; i < 6; i++) {
 		const temp: JournalEntryData = {
-			date: new Date(`2024-06-${28-i}`),
+			date: new Date(`2024-06-${28 - i}`),
 			text: STUB_TEXT_MED
 		}
 		if (i === 3) temp.text = STUB_TEXT_SHORT;
 		if (i === 5) temp.text = STUB_TEXT_LONG;
 		data.push(temp);
 	}
-  return (
-	<div className='p-5'>
-		<div className='p-2 w-full rounded-2xl h-full'>	
-			<h1 className='text-4xl font-bold my-5'>Journal</h1>
-			{data.map(data => ( 
-				<div>
-					<JournalEntry date={data.date} text={data.text}/>
-				</div>
-			))}
+	return (
+		<div className='p-5'>
+			<div className='p-2 w-full rounded-2xl h-full'>
+				<h1 className='text-4xl font-bold my-5'>Journal</h1>
+				{data.map(data => (
+					<div>
+						<JournalEntry date={data.date} text={data.text} />
+					</div>
+				))}
+			</div>
 		</div>
-	</div>
-  );
+	);
 };
 
 export default Journal;

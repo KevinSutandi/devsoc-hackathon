@@ -8,7 +8,6 @@ const Textbox = React.forwardRef<HTMLInputElement, {
     name: string,
     type: string,
     autoComplete: string,
-    [key: string]: any
 }>(({ id, name, type, autoComplete, ...rest }, ref) => {
     return (
         <input
