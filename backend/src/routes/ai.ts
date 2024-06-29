@@ -2,8 +2,7 @@ import express, { Request, Response } from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 import { dbGetAllJournals } from "../models/journals.models";
-// import { CustomRequest } from "../middleware/auth.middleware";
-// import { CustomRequest } from "../middleware/auth.middleware";
+import { CustomRequest } from "../middleware/auth.middleware";
 
 dotenv.config();
 
@@ -14,13 +13,12 @@ const configuration = new GoogleGenerativeAI(apiKey as string);
 const modelId = "gemini-pro";
 const model = configuration.getGenerativeModel({ model: modelId });
 
-const generateReport = async (uid: string, limit?: number) => {
+const combineJournals = async (uid: string, limit?: number) => {
     try {
         const journals = await dbGetAllJournals(uid, limit);
-        return journals.map((journal) => ({
-            title: journal.title,
-            content: journal.content,
-        }));
+        return journals
+            .map((journal) => `${journal.title}: ${journal.content}`)
+            .join("\n");
     } catch (error) {
         console.error("Error fetching journals:", error);
         throw error;
@@ -29,21 +27,15 @@ const generateReport = async (uid: string, limit?: number) => {
 
 export const generateResponse = async (req: Request, res: Response) => {
     try {
-        // const customReq = req as CustomRequest;
+        const customReq = req as CustomRequest;
 
-        // if (!customReq.token || typeof customReq.token === "string") {
-        //     throw new Error("Token is not valid");
-        // }
+        if (!customReq.token || typeof customReq.token === "string") {
+            throw new Error("Token is not valid");
+        }
 
         const chat = model.startChat();
 
-        const journals = await generateReport(
-            "af4d7b0e-9fcb-4ca5-879e-e8c45aa42245",
-            7,
-        );
-        const textForAI = journals
-            .map((journal) => `${journal.title}: ${journal.content}`)
-            .join("\n");
+        const textForAI = combineJournals(customReq.token.uid, 7);
 
         const prompt = `Pretend you're a therapist. This is your patient journals. Give a short advice to your patient.
         Remove the heading on your response
