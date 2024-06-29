@@ -3,10 +3,10 @@ import DateBlock from "./DateBlock"
 
 const MAX_CHARACTERS = 500;
 
-const JournalEntry = ( {date, text} : {date: Date, text: String}) => {
-  const [shortened, setShortened] = useState('');
-  const [sliced, setSliced] = useState(false);
-  const [showingFull, setShowingFull] = useState(true);
+const JournalEntry = ( {date, text, title} : {date: Date, text: String, title: String}) => {
+  const [shortened, setShortened] = useState<string>('');
+  const [sliced, setSliced] = useState<boolean>(false);
+  const [showingFull, setShowingFull] = useState<boolean>(true);
 
   useEffect(() => {
     if (text.length > MAX_CHARACTERS) {
@@ -24,6 +24,7 @@ const JournalEntry = ( {date, text} : {date: Date, text: String}) => {
         </div>
       </div>
       <div className="w-5/6 p-1.5 h-fit">
+        <p className="font-bold text-lg mb-1">{title}</p>
         {showingFull ? <span>{`${text} `}</span> : <span>{`${shortened}...`}</span> }
         {sliced &&
           <button

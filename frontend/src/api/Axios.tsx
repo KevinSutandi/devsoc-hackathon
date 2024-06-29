@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { BASE_URL } from "../utils/constants";
 
 const axiosInstanceWithAuth = axios.create({
-  baseURL: BASE_URL,
+  baseURL: '/api',
 });
 
 // Obtain the token

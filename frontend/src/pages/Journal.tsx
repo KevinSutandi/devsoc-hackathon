@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import JournalEntry from '../components/JournalEntry';
+import { axiosInstanceWithAuth } from '../api/Axios';
+import Cookies from 'js-cookie';
 
 interface JournalEntryData {
 	date: Date;
 	text: String;
+	title: String;
 }
 
 const STUB_TEXT_SHORT = 'Today was a mix of productivity and relaxation. I spent the morning working on my customer data analysis project. It\'s fascinating to see the patterns emerge as I dive deeper into the variables influencing churn rates. In the afternoon, I took a break and went for a long walk in the park. The fresh air and sunshine were just what I needed to recharge. Looking forward to continuing my work tomorrow with a fresh perspective.';
@@ -13,24 +16,43 @@ const STUB_TEXT_LONG = 'Today was quite fulfilling and balanced. My morning bega
 // TODO: Add monthly dividers
 
 const Journal: React.FC = () => {
+	const [curMonth, setCurMonth] = useState<number>(0);
 	const data = new Array<JournalEntryData>();
+
+	// Generating stub data for the meantime
 	for (let i = 0; i < 6; i++) {
 		const temp: JournalEntryData = {
 			date: new Date(`2024-06-${28-i}`),
-			text: STUB_TEXT_MED
+			text: STUB_TEXT_MED,
+			title: 'Entry Title Here',
 		}
 		if (i === 3) temp.text = STUB_TEXT_SHORT;
 		if (i === 5) temp.text = STUB_TEXT_LONG;
 		data.push(temp);
 	}
+	// Delete the code above
+	const fetchData = async () => {
+		try {
+			const data = await axiosInstanceWithAuth.post("/journals",
+				{ uid: Cookies.get('uid') }
+			);
+			console.log(data)
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	useEffect(() => {
+		fetchData();
+	}, [])
+
+
   return (
 	<div className='p-5'>
 		<div className='p-2 w-full rounded-2xl h-full'>	
 			<h1 className='text-4xl font-bold my-5'>Journal</h1>
 			{data.map(data => ( 
-				<div>
-					<JournalEntry date={data.date} text={data.text}/>
-				</div>
+				<JournalEntry date={data.date} text={data.text} title={data.title}/>
 			))}
 		</div>
 	</div>
