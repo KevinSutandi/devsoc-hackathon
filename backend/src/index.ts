@@ -5,6 +5,8 @@ import cors from "cors";
 import auth from "./routes/auth";
 import users from "./routes/users";
 import { authMiddleWare } from "./middleware/auth.middleware";
+import journals from "./routes/journals";
+import calendar from "./routes/calendar";
 
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -20,6 +22,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", auth);
 app.use("/api/users", authMiddleWare, users);
+app.use("/api/journals", authMiddleWare, journals);
+app.use("/api/calendar", authMiddleWare, calendar);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
