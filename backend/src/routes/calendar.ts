@@ -17,6 +17,7 @@ router.get("/month", async (req, res) => {
             new Date(date as string),
         );
     } catch (error) {
+        console.log(error);
         return res.status(500).send("Server error");
     }
 });
@@ -32,6 +33,7 @@ router.post("/log", async (req, res) => {
 
         return await dbUpsertCalendar(date, customReq.token.uid, mood);
     } catch (error) {
+        console.error(error);
         return res.status(500).send("Server error");
     }
 });
