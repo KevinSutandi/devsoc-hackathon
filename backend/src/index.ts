@@ -1,27 +1,26 @@
 import express from "express";
-import { Request, Response } from "express";
+// import { Request, Response } from "express";
+// import { authMiddleWare } from "./middleware/auth.middleware";
 import cors from "cors";
+import auth from "./routes/auth";
+import users from "./routes/users";
+import { authMiddleWare } from "./middleware/auth.middleware";
 
 const app = express();
-app.use(express.json());
-app.use(cors());
-
+const cookieParser = require("cookie-parser");
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
 const PORT = process.env.PORT || 3000;
 
-app.get("/api/get", (req: Request, res: Response) => {
-  return res.json({ message: "hi" });
-});
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(cookieParser());
 
-app.post("/api/post", (req: Request, res: Response) => {
-  const value = req.body.value;
-
-  if (value) {
-    return res.json({ value });
-  }
-
-  return res.json({ value: "No value" });
-});
+app.use("/api/auth", auth);
+app.use("/api/users", authMiddleWare, users);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

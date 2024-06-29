@@ -17,7 +17,7 @@ const Home: React.FC = () => {
   return (
     <div className="p-20 border-2 h-screen">
       <h1 className="text-4xl">Mood Calender</h1>
-      <div className="h-[55%] mt-[3%] w-[90%]">
+      <div className="h-[65%] mt-[3%] w-[90%]">
         <div className="flex h-full">
           <div className="w-[70%] flex justify-center items-center mr-[1.5%] rounded-2xl bg-indigo-50 shadow-md">
             Calender
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
                   How are you feeling today?
                 </div>
               </div>
-              <div className="flex flex-wrap gap-x-[12%] w-full h-[75%] justify-center items-center pb-[6%]">
+              <div className="mt-1 grid grid-cols-3 gap-x-5 space-y-3 w-full h-3/4 justify-center items-center pb-4">
                 {emojis.map((emoji) => (
                   <ButtonEmoji
                     emoji={emoji}
