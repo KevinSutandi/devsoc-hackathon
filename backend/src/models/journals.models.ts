@@ -16,3 +16,7 @@ export const dbCreateJournal = async (
         data: { title, profileUid: uid, content, image },
     });
 };
+
+export const dbGetJournalById = async (id: number) => {
+    return await prisma.journal.findUnique({ where: { id: id } });
+};
