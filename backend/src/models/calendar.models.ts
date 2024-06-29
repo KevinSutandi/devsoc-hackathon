@@ -7,7 +7,7 @@ export const dbUpsertCalendar = async (date: Date, uid: string, mood: Mood) => {
     const month = date.getMonth();
     const day = date.getDay();
 
-    return await prisma.log.upsert({
+    return await prisma.calendar.upsert({
         where: {
             uniqueDate: {
                 uid,
@@ -33,7 +33,7 @@ export const dbGetMonthByUid = async (uid: string, date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
 
-    return await prisma.log.findMany({
+    return await prisma.calendar.findMany({
         where: {
             uid,
             year,
