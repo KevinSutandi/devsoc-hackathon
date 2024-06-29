@@ -29,3 +29,5 @@ router.get("/", async (req, res) => {
         res.status(500).send("Error Server");
     }
 });
+
+export default router;

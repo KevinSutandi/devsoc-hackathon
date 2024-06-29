@@ -8,6 +8,7 @@ import calendar from "./routes/calendar";
 import ai from "./routes/ai";
 import daily from "./routes/daily";
 import todo from "./routes/todo";
+import leaderboard from "./routes/leaderboard";
 
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -28,6 +29,7 @@ app.use("/api/calendar", authMiddleWare, calendar);
 app.use("/api/ai", authMiddleWare, ai);
 app.use("/api/daily", authMiddleWare, daily);
 app.use("/api/todo", authMiddleWare, todo);
+app.use("/api/leaderboard", authMiddleWare, leaderboard);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
