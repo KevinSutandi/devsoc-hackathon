@@ -8,9 +8,8 @@ services:
     ports:
       - "3000:3000"
       - "5555:5555"
-    environment:
-      env_file:
-        - .env
+    env_file:
+      - .env
 
   db:
     image: mysql
