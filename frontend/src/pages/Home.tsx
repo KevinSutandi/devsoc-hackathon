@@ -17,10 +17,17 @@ const feelingEmoji: { [key: string]: string } = {
   LAUGHING: "😂",
 };
 
+interface ApiChecklistItem {
+  id: number;
+  profileUid: string;
+  note: string;
+  check: boolean;
+}
+
 interface ChecklistItem {
-  id: string;
-  label: string;
-  checked: boolean;
+  id: number;
+  note: string;
+  check: boolean;
 }
 
 const Home: React.FC = () => {
@@ -32,40 +39,35 @@ const Home: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [items, setItems] = useState<ChecklistItem[]>([
     {
-      id: "1",
-      label: "Complete project",
-      checked: false,
+      id: 1,
+      note: "Complete project",
+      check: false,
     },
-    { id: "2", label: "Review code", checked: false },
-    { id: "3", label: "Deploy to production", checked: false },
-    { id: "4", label: "Complete project documentation", checked: false },
-    { id: "5", label: "Review code", checked: false },
-    { id: "6", label: "Deploy to production", checked: false },
-    { id: "7", label: "Complete project documentation", checked: false },
-    { id: "8", label: "Review code", checked: false },
-    { id: "9", label: "Deploy to production", checked: false },
-    { id: "7", label: "Complete project documentation", checked: false },
-    { id: "8", label: "Review code", checked: false },
-    { id: "9", label: "Deploy to production", checked: false },
-    { id: "7", label: "Complete project documentation", checked: false },
-    { id: "8", label: "Review code", checked: false },
-    { id: "9", label: "Deploy to production", checked: false },
   ]);
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id: number) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item,
+        item.id === id ? { ...item, check: !item.check } : item,
       ),
     );
   };
 
   const fetchChecklists = async () => {
     try {
-      const response = axiosInstanceWithAuth.get("/all");
-      set
+      const response = await axiosInstanceWithAuth.get<ApiChecklistItem[]>(
+        "/todo/all",
+      );
+
+      const modifiedItems: ChecklistItem[] = response.data.map(
+        ({ profileUid, ...rest }) => rest,
+      );
+
+      setItems(modifiedItems);
+    } catch (e) {
+      console.error(e);
     }
-  }
+  };
 
   const handleChosenEmoji = (emoji: string) => {
     console.log("mekii");
@@ -74,7 +76,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchChecklists()
+    fetchChecklists();
   }, []);
 
   const tileContent = ({ date }: { date: Date }) => {
@@ -89,11 +91,19 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleAddNewTask = () => {
+  const handleAddNewTask = async () => {
+    try {
+      await axiosInstanceWithAuth.post("/todo/create", {
+        note: value,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
     const newTask: ChecklistItem = {
-      id: (items.length + 1).toString(),
-      label: value,
-      checked: false,
+      id: items.length + 1,
+      note: value,
+      check: false,
     };
     setItems((prevItems) => [...prevItems, newTask]);
     setValue(""); // Clear the input after adding the task
@@ -226,8 +236,8 @@ const Home: React.FC = () => {
                   {items.map((item) => (
                     <div>
                       <Checkbox
-                        checked={item.checked}
-                        label={item.label}
+                        checked={item.check}
+                        label={item.note}
                         onChange={() => handleToggle(item.id)}
                       />
                     </div>
