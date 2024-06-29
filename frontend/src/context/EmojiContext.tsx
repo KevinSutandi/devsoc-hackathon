@@ -18,7 +18,7 @@ export const EmojiProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   );
 };
 
-export const useModal = (): EmojiContextType => {
+export const useEmoji = (): EmojiContextType => {
   const context = useContext(EmojiContextType);
   if (!context) {
     throw new Error('useModal must be used within a ModalProvider');

@@ -13,50 +13,18 @@ import { newEntrySchema } from "../utils/journal.schema";
 import { z } from "zod";
 import { useJournal } from "../context/JournalContext";
 import ButtonEmoji from "./ButtonEmoji";
-import { useEffect, useState } from "react";
+import { useEmoji } from "../context/EmojiContext";
 
 type NewEntryProps = z.infer<typeof newEntrySchema>;
 
-export default function MyModal({
-  open,
-  close,
-}: {
-  open: boolean;
-  close: () => void;
-}) {
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+export default function MyModal({ open, close }: { open: boolean; close: () => void; }) {
+  const { register, setValue, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(newEntrySchema),
     defaultValues: {
       title: "",
       content: "",
     },
   });
-
-  const { fetchJournalData } = useJournal();
-
-  const onSubmit = async (data: NewEntryProps) => {
-    try {
-      const response = await axiosInstanceWithAuth.post("/journals/create", {
-        title: data.title,
-        content: data.content,
-        image: "",
-        date: new Date(),
-        emoji: "",
-      });
-      console.log(response);
-      fetchJournalData();
-      setValue("title", "");
-      setValue("content", "");
-      close();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const feelingEmoji: { [key: string]: string } = {
     happy: "😊",
@@ -67,15 +35,34 @@ export default function MyModal({
     laughing: "😂",
   };
 
-  const [emoji, setEmoji] = useState<string>("");
-  const handleChosenEmoji = (emoji: string) => {
-    console.log(emoji)
-    setEmoji(emoji);
+  const emojiToString: { [key: string]: string } = {
+    "😊": 'HAPPY',
+    "😐": 'NEUTRAL',
+    "😕": 'SAD',
+    "😡": 'ANGRY',
+    "😰": 'WORRIED',
+    "😂": 'LAUGHING',
   };
 
-  useEffect(() => {
-    console.log(emoji)
-  }, [])
+  const { fetchJournalData } = useJournal();
+
+  const { currentEmoji } = useEmoji();
+  const onSubmit = async (data: NewEntryProps) => {
+    try {
+      const response = await axiosInstanceWithAuth.post("/daily/create", {
+        title: data.title,
+        content: data.content,
+        mood: emojiToString[currentEmoji]
+      });
+      console.log(response);
+      fetchJournalData();
+      setValue("title", "");
+      setValue("content", "");
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -122,9 +109,7 @@ export default function MyModal({
                     <ButtonEmoji
                       key={key}
                       emoji={feelingEmoji[key]}
-                      onClick={() => {
-                        handleChosenEmoji(key)
-                      }}
+                      onClick={() => {}}
                       modalMode={true}
                     />
                   ))}
