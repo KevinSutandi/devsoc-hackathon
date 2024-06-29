@@ -4,11 +4,11 @@ import { HomeIcon, BookOpenIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/2
 import ButtonAddEvent from "./ButtonAddEvent";
 import { useState } from "react";
 import NewEntryModal from "./NewEntryModal";
+import { useProfile } from "../context/ProfileContext";
 
 const Sidebar = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
   return (
     <>
       <NewEntryModal open={open} close={() => setOpen(false)} />
