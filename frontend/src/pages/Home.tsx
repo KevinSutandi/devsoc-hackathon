@@ -23,7 +23,7 @@ interface ChecklistItem {
 }
 
 const Home: React.FC = () => {
-  const [emoji, setEmoji] = useState<string>("");
+  // const [emoji, setEmoji] = useState<string>("");
   const [feelings, setFeelings] = useState<Record<string, string>>({});
   const [items, setItems] = useState<ChecklistItem[]>([
     {
@@ -60,7 +60,8 @@ const Home: React.FC = () => {
 
   const handleChosenEmoji = (emoji: string) => {
     console.log("mekii");
-    setEmoji(emoji);
+    console.log(emoji)
+    // setEmoji(emoji);
   };
 
   // useEffect(() => {
