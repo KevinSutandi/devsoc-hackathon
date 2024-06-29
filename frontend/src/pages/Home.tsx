@@ -33,8 +33,7 @@ const Home: React.FC = () => {
   const [items, setItems] = useState<ChecklistItem[]>([
     {
       id: "1",
-      label:
-        "Complete project",
+      label: "Complete project",
       checked: false,
     },
     { id: "2", label: "Review code", checked: false },
@@ -53,7 +52,6 @@ const Home: React.FC = () => {
     { id: "9", label: "Deploy to production", checked: false },
   ]);
 
-
   const handleToggle = (id: string) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
@@ -64,7 +62,7 @@ const Home: React.FC = () => {
 
   const handleChosenEmoji = (emoji: string) => {
     console.log("mekii");
-    console.log(emoji)
+    console.log(emoji);
     // setEmoji(emoji);
   };
 
@@ -97,40 +95,60 @@ const Home: React.FC = () => {
 
   // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
   const handleOpenDay = (value: Date) => {
-    axiosInstanceWithAuth.get('/api/daily/', {
-      params: {
-        date: value
-      }
-    }).then((res) => {
-      setOpenShowDetails(true);
-      console.log(res.data)
+    axiosInstanceWithAuth
+      .get("/api/daily/", {
+        params: {
+          date: value,
+        },
+      })
+      .then((res) => {
+        setOpenShowDetails(true);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+  const handleViewChange = async ({
+    activeStartDate,
+  }: {
+    action: string;
+    activeStartDate: Date | null;
+  }) => {
+    console.log(activeStartDate);
+    axiosInstanceWithAuth
+      .get("/api/calendar/month", {
+        params: {
+          date: activeStartDate,
+        },
+      })
+      .then((res) => {
+        const data = res.data;
 
-  const handleViewChange = async ({ activeStartDate }: { action: string, activeStartDate: Date | null }) => {
-    console.log(activeStartDate)
-    axiosInstanceWithAuth.get('/api/calendar/month', {
-      params: {
-        date: activeStartDate
-      }
-    }).then((res) => {
-      const data = res.data;
+        const feelingsData = data.reduce(
+          (
+            acc: Record<string, string>,
+            item: { year: number; month: number; day: number; mood: string },
+          ) => {
+            const date = new Date(
+              item.year,
+              item.month,
+              item.day,
+            ).toLocaleDateString(); // Adjust month since it's 0-indexed
+            acc[date] = item.mood;
+            return acc;
+          },
+          {},
+        );
 
-      const feelingsData = data.reduce((acc: Record<string, string>, item: { year: number; month: number; day: number; mood: string; }) => {
-        const date = new Date(item.year, item.month, item.day).toLocaleDateString(); // Adjust month since it's 0-indexed
-        acc[date] = item.mood;
-        return acc;
-      }, {});
-
-      console.log(feelingsData)
-      setFeelings(feelingsData)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+        console.log(feelingsData);
+        setFeelings(feelingsData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // mindate is Jan 1, 2024
   const minDate = new Date(2024, 0, 1);
@@ -139,7 +157,10 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <ShowDetailModal open={openShowDetails} close={() => setOpenShowDetails(false)} />
+      <ShowDetailModal
+        open={openShowDetails}
+        close={() => setOpenShowDetails(false)}
+      />
       <AddChecklistModal
         open={openChecklist}
         close={handleAddNewTask}
@@ -155,7 +176,14 @@ const Home: React.FC = () => {
             <div className="w-[70%] flex justify-center items-center mr-[1.5%] rounded-2xl bg-indigo-50 shadow-md">
               <div>
                 {/* Make it disabled for yesterday and above */}
-                <Calendar className="p-5" tileContent={tileContent} onClickDay={handleOpenDay} minDate={minDate} maxDate={maxDate} onActiveStartDateChange={handleViewChange} />
+                <Calendar
+                  className="p-5"
+                  tileContent={tileContent}
+                  onClickDay={handleOpenDay}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  onActiveStartDateChange={handleViewChange}
+                />
               </div>
             </div>
 
@@ -179,7 +207,10 @@ const Home: React.FC = () => {
               <div className="flex-1 w-full h-[60%] flex flex-col rounded-2xl bg-yellow-50 shadow-md">
                 <div className="w-full h-[25%] self flex justify-between items-center px-[9%] py-[7%]">
                   <h2 className="text-lg font-semibold">Today's Checklist</h2>
-                  <button className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200">
+                  <button
+                    onClick={() => setOpenChecklist(!openChecklist)}
+                    className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200"
+                  >
                     <PlusIcon className="h-4 w-4" />
                   </button>
                 </div>

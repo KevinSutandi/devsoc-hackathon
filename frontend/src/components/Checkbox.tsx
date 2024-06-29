@@ -14,12 +14,12 @@ const Checkbox: React.FC<CustomCheckboxProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-x-3 justify-start">
-      <div
+      <button
         className="w-5 h-5 border border-black flex justify-center items-center"
         onClick={onChange}
       >
         <div>{checked && <CheckIcon className="w-5 h-5 animate-fadeIn" />}</div>
-      </div>
+      </button>
       <div className="w-[80%]">{label}</div>
     </div>
   );
