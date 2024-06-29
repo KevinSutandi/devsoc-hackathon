@@ -7,7 +7,7 @@ import users from "./routes/users";
 import { authMiddleWare } from "./middleware/auth.middleware";
 import journals from "./routes/journals";
 import calendar from "./routes/calendar";
-import airouter from "./routes/ai.routes";
+import ai from "./routes/ai";
 
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -25,7 +25,7 @@ app.use("/api/auth", auth);
 app.use("/api/users", authMiddleWare, users);
 app.use("/api/journals", authMiddleWare, journals);
 app.use("/api/calendar", authMiddleWare, calendar);
-app.use("/api/ai", authMiddleWare, airouter);
+app.use("/api/ai", ai);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

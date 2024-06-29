@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const router = express.Router();
 
-const configuration = new GoogleGenerativeAI(
-    process.env.GOOGLE_API_KEY as string,
-);
+const apiKey = process.env.GOOGLE_API_KEY?.toString();
+const configuration = new GoogleGenerativeAI(apiKey as string);
 const modelId = "gemini-pro";
 const model = configuration.getGenerativeModel({ model: modelId });
 
@@ -37,13 +37,13 @@ export const generateResponse = async (req: Request, res: Response) => {
         // Stores the conversation
         conversationContext.push([prompt, responseText]);
 
-        res.send({ response: responseText });
+        res.json({ response: responseText });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
-router.post("/generate", generateResponse);
+router.post("/", generateResponse);
 
 export default router;
