@@ -2,15 +2,14 @@ import Profile from "./NavbarComponents/Profile";
 import SidebarButton from "./NavbarComponents/SidebarButton";
 import { HomeIcon, BookOpenIcon } from "@heroicons/react/24/outline";
 import ButtonAddEvent from "./ButtonAddEvent";
-
-import { useState } from "react";
 import NewEntryModal from "./NewEntryModal";
+import { useModal } from "../context/ModalContext";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const { isModalOpen, openCloseModal } = useModal();
   return (
     <>
-      <NewEntryModal open={open} close={() => setOpen(false)} />
+      <NewEntryModal open={isModalOpen} close={openCloseModal} />
       <div className="fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl rounded-r-xl pt-10">
         <div className="flex flex-col w-full items-center gap-1">
           <div className="text-center font-extralight py-4 text-2xl tracking-wide">
@@ -25,7 +24,7 @@ const Sidebar = () => {
             Icon={<BookOpenIcon />}
           />
           <div className="flex justify-center w-full mt-8">
-            <ButtonAddEvent open={open} setOpen={setOpen} />
+            <ButtonAddEvent open={isModalOpen} setOpen={openCloseModal} />
           </div>
         </div>
         <Profile />

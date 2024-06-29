@@ -24,9 +24,7 @@ interface ChecklistItem {
 }
 
 const Home: React.FC = () => {
-  // const [emoji, setEmoji] = useState<string>("");
   const [feelings, setFeelings] = useState<Record<string, string>>({});
-  // const [emoji, setEmoji] = useState<string>("");
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");

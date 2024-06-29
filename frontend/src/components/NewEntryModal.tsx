@@ -12,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { newEntrySchema } from "../utils/journal.schema";
 import { z } from "zod";
 import { useJournal } from "../context/JournalContext";
+import ButtonEmoji from "./ButtonEmoji";
+import { useEffect, useState } from "react";
 
 type NewEntryProps = z.infer<typeof newEntrySchema>;
 
@@ -44,6 +46,7 @@ export default function MyModal({
         content: data.content,
         image: "",
         date: new Date(),
+        emoji: "",
       });
       console.log(response);
       fetchJournalData();
@@ -54,6 +57,25 @@ export default function MyModal({
       console.log(error);
     }
   };
+
+  const feelingEmoji: { [key: string]: string } = {
+    happy: "😊",
+    neutral: "😐",
+    sad: "😕",
+    angry: "😡",
+    worried: "😰",
+    laughing: "😂",
+  };
+
+  const [emoji, setEmoji] = useState<string>("");
+  const handleChosenEmoji = (emoji: string) => {
+    console.log(emoji)
+    setEmoji(emoji);
+  };
+
+  useEffect(() => {
+    console.log(emoji)
+  }, [])
 
   return (
     <>
@@ -89,6 +111,24 @@ export default function MyModal({
                 {errors.title && (
                   <p className="text-red-600 text-sm">{errors.title.message}</p>
                 )}
+                <DialogTitle
+                  as="h2"
+                  className="text-base/7 font-semibold text-black"
+                >
+                  How are you feeling today?
+                </DialogTitle>
+                <div className="mt-1 grid grid-cols-3 gap-x-5 space-y-3 w-full h-3/4 justify-center items-center pb-4">
+                  {Object.keys(feelingEmoji).map((key) => (
+                    <ButtonEmoji
+                      key={key}
+                      emoji={feelingEmoji[key]}
+                      onClick={() => {
+                        handleChosenEmoji(key)
+                      }}
+                      modalMode={true}
+                    />
+                  ))}
+                </div>  
                 <DialogTitle
                   as="h2"
                   className="text-base/7 font-semibold text-black"
