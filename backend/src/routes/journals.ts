@@ -17,7 +17,6 @@ router.post("/", async (req: Request, res: Response) => {
         if (!customReq.token || typeof customReq.token === "string") {
             throw new Error("Token is not valid");
         }
-
         const journals = await dbGetAllJournals(customReq.token.uid);
         return res.send(journals);
     } catch (error) {
@@ -48,7 +47,6 @@ router.post("/create", async (req: Request, res: Response) => {
             content,
             image,
         );
-
         return res.send(journal);
     } catch (error) {
         console.error(error);
