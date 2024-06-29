@@ -29,16 +29,16 @@ model Profile {
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  journals  Journal  @relation(fields: [journalId], references: [id])
-  journalId String
+  Journal Journal[]
 }
 
 model Journal {
-  id        String    @id @unique
-  title     String
-  content   String
-  image     String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Profile   Profile[]
+  id         String   @id @unique
+  title      String
+  content    String
+  image      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  author     Profile  @relation(fields: [profileUid], references: [uid])
+  profileUid String
 }
