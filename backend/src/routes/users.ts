@@ -24,6 +24,7 @@ router.get("/", async (req, res) => {
 
         return res.status(200).send(profile);
     } catch (error) {
+        console.log(error);
         return res.status(500).send("Server error");
     }
 });
