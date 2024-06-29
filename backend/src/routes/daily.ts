@@ -1,7 +1,10 @@
 import express from "express";
 import { CustomRequest } from "../middleware/auth.middleware";
-import { dbUpsertCalendar } from "../models/calendar.models";
-import { dbCreateJournal } from "../models/journals.models";
+import {
+    dbGetCalandarByDate,
+    dbUpsertCalendar,
+} from "../models/calendar.models";
+import { dbCreateJournal, dbGetJournalByDate } from "../models/journals.models";
 
 const router = express.Router();
 
@@ -25,6 +28,25 @@ router.post("/create", async (req, res) => {
     }
 
     return res.status(200).send("Success");
+});
+
+router.get("/", async (req, res) => {
+    try {
+        const customReq = req as CustomRequest;
+        if (!customReq.token || typeof customReq.token === "string") {
+            throw new Error("Token is not valid");
+        }
+
+        const { date } = req.body;
+
+        const journal = await dbGetJournalByDate(customReq.token.uid, date);
+        const calendar = await dbGetCalandarByDate(customReq.token.uid, date);
+
+        return res.status(200).send({ journal, calendar });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send(error);
+    }
 });
 
 export default router;

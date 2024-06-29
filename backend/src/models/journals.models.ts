@@ -41,3 +41,9 @@ export const dbUpdateJournal = async (
 export const dbDeleteJournal = async (id: number) => {
     return await prisma.journal.delete({ where: { id: id } });
 };
+
+export const dbGetJournalByDate = async (uid: string, date: Date) => {
+    return await prisma.journal.findFirst({
+        where: { profileUid: uid, createdAt: date },
+    });
+};
