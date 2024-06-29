@@ -15,7 +15,8 @@ router.get("/", async (req: Request, res: Response) => {
         const journals = await dbGetAllJournals(uid);
         return res.send(journals);
     } catch (error) {
-        return res.status(500).send("Server error");
+        console.error(error);
+        return res.status(500).send(`Server error: ${error}`);
     }
 });
 
