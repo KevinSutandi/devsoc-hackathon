@@ -24,7 +24,9 @@ interface ChecklistItem {
 }
 
 const Home: React.FC = () => {
+  // const [emoji, setEmoji] = useState<string>("");
   const [feelings, setFeelings] = useState<Record<string, string>>({});
+  // const [emoji, setEmoji] = useState<string>("");
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
@@ -59,6 +61,16 @@ const Home: React.FC = () => {
       ),
     );
   };
+
+  const handleChosenEmoji = (emoji: string) => {
+    console.log("mekii");
+    console.log(emoji)
+    // setEmoji(emoji);
+  };
+
+  // useEffect(() => {
+  //   console.log(emoji);
+  // }, [emoji]);
 
   const tileContent = ({ date }: { date: Date }) => {
     const dateKey = date.toLocaleDateString();
@@ -177,7 +189,7 @@ const Home: React.FC = () => {
                     <ButtonEmoji
                       key={key}
                       emoji={feelingEmoji[key]}
-                      onClick={() => {}}
+                      onClick={() => handleChosenEmoji(key)}
                     />
                   ))}
                 </div>

@@ -19,7 +19,7 @@ const ButtonEmoji = ({ emoji, onClick, modalMode }: IButtonEmojiProps) => {
 
   return (
     <button
-      className="xl:text-4xl lg:text-3xl text-4xl mt-3 hover:scale-125 hover:transition-transform hover:duration-200 duration-200"
+      className={`${(currentEmoji == emoji) && modalMode ? 'scale-125' : 'hover:scale-125'} xl:text-4xl lg:text-3xl text-4xl mt-3 hover:scale-125 hover:transition-transform hover:duration-200 duration-200`}
       onClick={() => {
         onClick();
         if (!modalMode) {
