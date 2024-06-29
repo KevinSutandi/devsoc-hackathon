@@ -2,8 +2,17 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const dbGetAllJournals = async (uid: string) => {
-    return await prisma.journal.findMany({ where: { profileUid: uid } });
+export const dbGetAllJournals = async (uid: string, limit?: number) => {
+    const queryOptions: any = {
+        where: { profileUid: uid },
+        orderBy: { createdAt: "desc" },
+    };
+
+    if (limit) {
+        queryOptions.take = limit;
+    }
+
+    return await prisma.journal.findMany(queryOptions);
 };
 
 export const dbCreateJournal = async (
