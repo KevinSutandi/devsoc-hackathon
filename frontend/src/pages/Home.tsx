@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ButtonEmoji from "../components/ButtonEmoji";
 import "../utils/calendar.css";
 import Calendar from "react-calendar";
@@ -60,15 +60,22 @@ const Home: React.FC = () => {
     );
   };
 
+  const fetchChecklists = async () => {
+    try {
+      const response = axiosInstanceWithAuth.get("/all");
+      set
+    }
+  }
+
   const handleChosenEmoji = (emoji: string) => {
     console.log("mekii");
     console.log(emoji);
     // setEmoji(emoji);
   };
 
-  // useEffect(() => {
-  //   console.log(emoji);
-  // }, [emoji]);
+  useEffect(() => {
+    fetchChecklists()
+  }, []);
 
   const tileContent = ({ date }: { date: Date }) => {
     const dateKey = date.toLocaleDateString();
