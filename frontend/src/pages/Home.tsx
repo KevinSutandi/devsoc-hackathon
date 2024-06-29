@@ -4,7 +4,7 @@ import "../utils/calendar.css";
 import Calendar from "react-calendar";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Checkbox from "../components/Checkbox";
-import NewEntryModal from "../components/NewEntryModal";
+import AddChecklistModal from "../components/AddChecklistModal";
 
 // Example data
 const initialFeelings: { [key: string]: string } = {
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="p-20 border-2 h-screen">
-      <NewEntryModal
+      <AddChecklistModal
         open={open}
         close={handleAddNewTask}
         title="What task are you working on today?"

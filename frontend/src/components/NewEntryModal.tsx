@@ -6,25 +6,55 @@ import {
   DialogTitle,
   Textarea,
 } from "@headlessui/react";
+import { axiosInstanceWithAuth } from "../api/Axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { newEntrySchema } from "../utils/journal.schema";
+import { z } from "zod";
+import { useJournal } from "../context/JournalContext";
+
+type NewEntryProps = z.infer<typeof newEntrySchema>;
 
 export default function MyModal({
   open,
   close,
-  title,
-  multiline,
-  value,
-  setValue,
 }: {
   open: boolean;
   close: () => void;
-  title: string;
-  multiline: boolean;
-  value: string;
-  setValue: any;
 }) {
-  const handleValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(newEntrySchema),
+    defaultValues: {
+      title: "",
+      content: "",
+    },
+  });
+
+  const { fetchJournalData } = useJournal();
+
+  const onSubmit = async (data: NewEntryProps) => {
+    try {
+      const response = await axiosInstanceWithAuth.post("/journals/create", {
+        title: data.title,
+        content: data.content,
+        image: "",
+        date: new Date(),
+      });
+      console.log(response);
+      fetchJournalData();
+      setValue("title", "");
+      setValue("content", "");
+      close();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <>
       <Dialog
@@ -44,27 +74,46 @@ export default function MyModal({
               transition
               className="w-full max-w-2xl rounded-xl bg-white/60 p-6 px-8 backdrop-blur-2xl duration-150 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
             >
-              <DialogTitle
-                as="h2"
-                className="text-base/7 font-semibold text-black"
-              >
-                {title}
-              </DialogTitle>
-
-              <Textarea
-                className="mt-3 block w-full resize-none rounded-lg border-none bg-white py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
-                rows={multiline ? 11 : 1}
-                value={value}
-                onChange={handleValueChange}
-              />
-              <div className="mt-6 flex justify-end">
-                <Button
-                  className="inline-flex items-center gap-2 rounded-md bg-indigo-600 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner focus:outline-none data-[hover]:bg-indigo-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-indigo-400"
-                  onClick={close}
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <DialogTitle
+                  as="h2"
+                  className="text-base/7 font-semibold text-black"
                 >
-                  Submit
-                </Button>
-              </div>
+                  Give your new journal entry a title!
+                </DialogTitle>
+                <Textarea
+                  className="mt-3 mb-3 block w-full resize-none rounded-lg border-none bg-white py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
+                  rows={1}
+                  {...register("title")}
+                />
+                {errors.title && (
+                  <p className="text-red-600 text-sm">{errors.title.message}</p>
+                )}
+                <DialogTitle
+                  as="h2"
+                  className="text-base/7 font-semibold text-black"
+                >
+                  Tell us how your day went!
+                </DialogTitle>
+                <Textarea
+                  className="mt-3 block w-full resize-none rounded-lg border-none bg-white py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
+                  rows={11}
+                  {...register("content")}
+                />
+                {errors.content && (
+                  <p className="text-red-600 text-sm">
+                    {errors.content.message}
+                  </p>
+                )}
+                <div className="mt-6 flex justify-end">
+                  <Button
+                    className="inline-flex items-center gap-2 rounded-md bg-indigo-600 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner focus:outline-none data-[hover]:bg-indigo-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-indigo-400"
+                    type="submit"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </form>
             </DialogPanel>
           </div>
         </div>
