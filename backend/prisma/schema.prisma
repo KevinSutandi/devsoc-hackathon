@@ -14,19 +14,42 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(uuid())
-  email      String  @unique
+  id         String   @id @default(uuid())
+  email      String   @unique
   password   String
   profile    Profile?
-  resetToken String? @unique
+  resetToken String?  @unique
+  log        Log[]
 }
 
 model Profile {
-  uid    String @unique @id
-  user      User   @relation(fields: [uid], references: [id])
+  uid       String   @id @unique
+  user      User     @relation(fields: [uid], references: [id])
   fullname  String
-  username  String @unique
+  username  String   @unique
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Mood {
+  LAUGHING
+  HAPPY
+  NEUTRAL
+  CRYING
+  WORRIED
+  SAD
+  ANGRY
+}
+
+model Log {
+  uid   String
+  user  User   @relation(fields: [uid], references: [id])
+  id    Int    @id @default(autoincrement())
+  day   Int
+  month Int
+  year  Int
+  mood  Mood
+
+  @@unique(name: "uniqueDate", [uid, day, month, year])
 }
