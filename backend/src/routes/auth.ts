@@ -48,6 +48,7 @@ router.post("/register", async (req, res) => {
             return res.status(400).send("Username already in use");
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).send("Server error");
     }
 
@@ -68,6 +69,7 @@ router.post("/register", async (req, res) => {
         const token = sign(jwtUser, process.env.JWT_HASH, { expiresIn: "1d" });
         res.cookie("token", token);
     } catch (error) {
+        console.log(error);
         return res.status(500).send(error);
     }
 
