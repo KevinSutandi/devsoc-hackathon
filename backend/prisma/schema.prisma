@@ -22,15 +22,17 @@ model User {
 }
 
 model Profile {
-  uid       String     @id @unique
-  user      User       @relation(fields: [uid], references: [id])
-  fullname  String
-  username  String     @unique
-  image     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Journal   Journal[]
-  calendar  Calendar[]
+  uid             String     @id @unique
+  user            User       @relation(fields: [uid], references: [id])
+  fullname        String
+  username        String     @unique
+  image           String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  Journal         Journal[]
+  calendar        Calendar[]
+  todo            Todo[]
+  happinessPoints Int        @default(0)
 }
 
 model Journal {
@@ -64,4 +66,12 @@ model Calendar {
   mood    Mood
 
   @@unique(name: "uniqueDate", [uid, day, month, year])
+}
+
+model Todo {
+  id         Int     @id @default(autoincrement())
+  author     Profile @relation(fields: [profileUid], references: [uid])
+  profileUid String
+  check      Boolean
+  note       String
 }
