@@ -26,6 +26,7 @@ router.post("/create", async (req, res) => {
         await dbUpsertCalendar(date, customReq.token.uid, mood);
         await dbCreateJournal(customReq.token.uid, title, content, "", date);
     } catch (error) {
+        console.log(error)
         return res.status(500).send(error);
     }
 
