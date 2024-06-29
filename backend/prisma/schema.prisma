@@ -56,7 +56,7 @@ enum Mood {
 
 model Log {
   uid   String
-  user  Profile @relation(fields: [uid], references: [uid])
+  profile  Profile @relation(fields: [uid], references: [uid])
   id    Int     @id @default(autoincrement())
   day   Int
   month Int
