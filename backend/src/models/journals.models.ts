@@ -10,8 +10,9 @@ export const dbCreateJournal = async (
     uid: string,
     title: string,
     content: string,
+    image: string,
 ) => {
     return await prisma.journal.create({
-        data: { title, profileUid: uid, content },
+        data: { title, profileUid: uid, content, image },
     });
 };
