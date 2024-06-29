@@ -4,7 +4,7 @@ export default function ShowDetailModal({ open, close }: { open: boolean, close:
 
     return (
         <>
-            <Dialog open={open} as="div" className="relative z-10 focus:outline-none transition duration-150 ease-out" transition onClose={close}>
+            <Dialog open={open} as="div" className="relative z-[100] focus:outline-none transition duration-150 ease-out" transition onClose={close}>
                 <DialogBackdrop className="fixed inset-0 bg-black/30 data-[closed]:opacity-0 duration-150 ease-out" transition />
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-6">

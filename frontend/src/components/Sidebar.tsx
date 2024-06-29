@@ -4,14 +4,14 @@ import { HomeIcon, BookOpenIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/2
 import ButtonAddEvent from "./ButtonAddEvent";
 import { useState } from "react";
 import NewEntryModal from "./NewEntryModal";
-import { useProfile } from "../context/ProfileContext";
+import { useModal } from "../context/ModalContext";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const { isModalOpen, openCloseModal } = useModal();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   return (
     <>
-      <NewEntryModal open={open} close={() => setOpen(false)} />
+      <NewEntryModal open={isModalOpen} close={openCloseModal} />
       {/* Toggle Button for Mobile */}
       <div className="fixed top-4 left-4 lg:hidden z-50 w-64">
         <button onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -32,7 +32,7 @@ const Sidebar = () => {
           <SidebarButton href="/" Icon={<HomeIcon />} text="Home" />
           <SidebarButton href="/journal" text="Journal" Icon={<BookOpenIcon />} />
           <div className="flex justify-center w-full mt-8">
-            <ButtonAddEvent open={open} setOpen={setOpen} />
+            <ButtonAddEvent open={isModalOpen} setOpen={openCloseModal} />
           </div>
         </div>
         <Profile />
