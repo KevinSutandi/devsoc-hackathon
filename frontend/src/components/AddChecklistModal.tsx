@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Dialog,
@@ -20,11 +21,18 @@ const AddChecklistModal = ({
   title: string;
   multiline: boolean;
   value: string;
-  setValue: any;
+  setValue: (value: string) => void;
 }) => {
+  const wordLimit = 25;
+
   const handleValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
+    const newValue = event.target.value;
+    const words = newValue.length;
+    if (words <= wordLimit) {
+      setValue(newValue);
+    }
   };
+
   return (
     <>
       <Dialog
@@ -57,6 +65,9 @@ const AddChecklistModal = ({
                 value={value}
                 onChange={handleValueChange}
               />
+              <div className="mt-2 text-sm text-gray-500">
+                {value.length} / {wordLimit} words
+              </div>
               <div className="mt-6 flex justify-end">
                 <Button
                   className="inline-flex items-center gap-2 rounded-md bg-indigo-600 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner focus:outline-none data-[hover]:bg-indigo-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-indigo-400"

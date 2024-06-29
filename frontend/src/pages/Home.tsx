@@ -37,20 +37,28 @@ const Home: React.FC = () => {
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const [items, setItems] = useState<ChecklistItem[]>([
-    {
-      id: 1,
-      note: "Complete project",
-      check: false,
-    },
-  ]);
+  const [items, setItems] = useState<ChecklistItem[]>([]);
 
-  const handleToggle = (id: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, check: !item.check } : item,
-      ),
-    );
+  const handleToggle = async (id: number) => {
+    const itemToUpdate = items.find((item) => item.id === id);
+    if (!itemToUpdate) return;
+
+    try {
+      const updatedItem = { ...itemToUpdate, check: !itemToUpdate.check };
+      console.log(updatedItem);
+      await axiosInstanceWithAuth.put("/todo/update", {
+        id: updatedItem.id,
+        note: updatedItem.note,
+        check: updatedItem.check,
+      });
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id ? { ...item, check: !item.check } : item,
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const fetchChecklists = async () => {

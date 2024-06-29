@@ -56,7 +56,7 @@ router.put("/update", async (req, res) => {
 
         const { note, check, id } = req.body;
 
-        if (!note || !check || !id) {
+        if (!note || check === undefined || !id) {
             return res.status(400).send("Missing");
         }
 
@@ -64,7 +64,7 @@ router.put("/update", async (req, res) => {
             return res.status(400).send("Invalid Id");
         }
 
-        await dbUpdateTodo(id, customReq.token.uid, note, check);
+        await dbUpdateTodo(customReq.token.uid, id, note, check);
         return res.status(200).send("success");
     } catch (error) {
         console.log(error);
