@@ -15,9 +15,11 @@ router.post("/create", async (req, res) => {
             throw new Error("Token is not valid");
         }
 
-        const { title, content, date, mood } = req.body;
+        const { title, content, mood } = req.body;
+        const date = new Date(req.body.date);
 
-        if (!title || !content || !date || !mood) {
+
+        if (!title || !content || !mood || !date) {
             return res.status(400).send("Missing Variable");
         }
 
@@ -37,7 +39,7 @@ router.get("/", async (req, res) => {
             throw new Error("Token is not valid");
         }
 
-        const { date } = req.body;
+        const date = new Date(req.query.date as string);
 
         const journal = await dbGetJournalByDate(customReq.token.uid, date);
         const calendar = await dbGetCalandarByDate(customReq.token.uid, date);
