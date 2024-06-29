@@ -12,23 +12,23 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // useEffect(() => {
-  //   const cookies = Cookies.get("token");
+  useEffect(() => {
+    const cookies = Cookies.get("token");
 
-  //   if (
-  //     !cookies &&
-  //     location.pathname !== "/login" &&
-  //     location.pathname !== "/register"
-  //   ) {
-  //     navigate("/login");
-  //     // Redirect to the dashboard if cookies exists
-  //   } else if (
-  //     cookies &&
-  //     (location.pathname === "/login" || location.pathname === "/register")
-  //   ) {
-  //     navigate("/");
-  //   }
-  // }, [navigate, location]);
+    if (
+      !cookies &&
+      location.pathname !== "/login" &&
+      location.pathname !== "/register"
+    ) {
+      navigate("/login");
+      // Redirect to the dashboard if cookies exists
+    } else if (
+      cookies &&
+      (location.pathname === "/login" || location.pathname === "/register")
+    ) {
+      navigate("/");
+    }
+  }, [navigate, location]);
 
   return (
     <Routes>
