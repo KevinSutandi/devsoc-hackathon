@@ -18,6 +18,8 @@ router.post("/create", async (req, res) => {
         const { title, content, mood } = req.body;
         const date = new Date(req.body.date);
 
+        console.log(date)
+
 
         if (!title || !content || !mood || !date) {
             return res.status(400).send("Missing Variable");
@@ -26,6 +28,7 @@ router.post("/create", async (req, res) => {
         await dbUpsertCalendar(date, customReq.token.uid, mood);
         await dbCreateJournal(customReq.token.uid, title, content, "", date);
     } catch (error) {
+        console.log(error)
         return res.status(500).send(error);
     }
 
