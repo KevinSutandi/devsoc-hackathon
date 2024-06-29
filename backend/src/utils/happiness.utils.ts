@@ -13,5 +13,5 @@ export const calculateMood = (mood: Mood): number => {
         return -70;
     } else {
         return -100;
-    }ƒ
+    }
 };
