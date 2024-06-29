@@ -1,40 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import JournalEntry from '../components/JournalEntry';
-import { axiosInstanceWithAuth } from '../api/Axios';
+import { useJournal } from '../context/JournalContext';
 
-interface JournalEntryData {
-	content: string;
-	createdAt: string;
-	id: number;
-	image: string;
-	profileUid: string;
-	title: string;
-	updatedAt: string;
-}
 // TODO: Add monthly dividers
 
 const Journal: React.FC = () => {
-	const [entryData, setEntryData] = useState<Array<JournalEntryData>>(new Array<JournalEntryData>);
-	const fetchData = async () => {
-		try {
-			const data = await axiosInstanceWithAuth.post("/journals");
-			setEntryData(data.data);
-		} catch (error) {
-			console.error(error);
-		}
-	}
+	const { entryData, fetchJournalData } = useJournal();
 
 	useEffect(() => {
-		fetchData();
+		fetchJournalData();
 	}, [])
-
 
   return (
 	<div className='p-5'>
 		<div className='p-2 w-full rounded-2xl h-full'>	
 			<h1 className='text-4xl font-bold my-5'>Journal</h1>
 			<div className='flex flex-col-reverse'>
-				{entryData.map(data => ( 
+				{entryData.map((data: { createdAt: string; content: string; title: string; }) => ( 
 					<JournalEntry date={data.createdAt} text={data.content} title={data.title}/>
 				))}
 			</div>

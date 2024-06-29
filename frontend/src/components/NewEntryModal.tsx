@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { newEntrySchema } from '../utils/journal.schema';
 import { z } from 'zod';
+import { useJournal } from '../context/JournalContext';
 
 type NewEntryProps = z.infer<typeof newEntrySchema>;
 
@@ -15,6 +16,8 @@ export default function MyModal({ open, close }: { open: boolean, close: () => v
       content: "",
     }
   });
+
+  const { fetchJournalData } = useJournal();
   
   const onSubmit = async (data : NewEntryProps) => {
 		try {
@@ -22,10 +25,10 @@ export default function MyModal({ open, close }: { open: boolean, close: () => v
 				{ title: data.title , content: data.content , image: '', date: new Date() }
 			);
       console.log(response);
+      fetchJournalData();
       setValue('title', '');
       setValue('content', '');
 			close();
-      window.location.reload();
 		} catch (error) {
 			console.log(error);
 		}
