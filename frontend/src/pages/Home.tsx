@@ -45,6 +45,12 @@ const Home: React.FC = () => {
     { id: "7", label: "Complete project documentation", checked: false },
     { id: "8", label: "Review code", checked: false },
     { id: "9", label: "Deploy to production", checked: false },
+    { id: "7", label: "Complete project documentation", checked: false },
+    { id: "8", label: "Review code", checked: false },
+    { id: "9", label: "Deploy to production", checked: false },
+    { id: "7", label: "Complete project documentation", checked: false },
+    { id: "8", label: "Review code", checked: false },
+    { id: "9", label: "Deploy to production", checked: false },
   ]);
 
   const handleToggle = (id: string) => {
@@ -97,7 +103,7 @@ const Home: React.FC = () => {
           </div>
 
           <div className="w-[30%] flex flex-col justify-center items-center gap-y-[3%]">
-            <div className="flex-1 w-full flex flex-col rounded-2xl items-center bg-green-50 shadow-md">
+            <div className="flex-1 w-full flex flex-col rounded-2xl items-center bg-green-50 shadow-md h-[40%]">
               <h2 className="text-lg font-semibold w-full h-[25%] self flex justify-center pt-[7%]">
                 How are you feeling today?
               </h2>
@@ -113,8 +119,8 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex-1 w-full flex flex-col rounded-2xl bg-yellow-50 shadow-md">
-              <div className="w-full h-[25%] self flex justify-between items-center px-8">
+            <div className="flex-1 w-full h-[60%] flex flex-col rounded-2xl bg-yellow-50 shadow-md">
+              <div className="w-full h-[25%] self flex justify-between items-center px-[9%] py-[7%]">
                 <h2 className="text-lg font-semibold">Today's Checklist</h2>
                 <button className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200">
                   <PlusIcon className="h-4 w-4" />
