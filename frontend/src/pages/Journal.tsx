@@ -26,7 +26,7 @@ const Journal: React.FC = () => {
 
 	useEffect(() => {
 		fetchData();
-	}, [fetchData])
+	}, [])
 
 
   return (

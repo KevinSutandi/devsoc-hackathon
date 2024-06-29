@@ -19,16 +19,18 @@ export default function MyModal({ open, close }: { open: boolean, close: () => v
   const onSubmit = async (data : NewEntryProps) => {
 		try {
 			const response = await axiosInstanceWithAuth.post("/journals/create", 
-				{ title: data.title , content: data.content , image: '' }
+				{ title: data.title , content: data.content , image: '', date: new Date() }
 			);
-      console.log(response)
-      setValue('title', '')
-      setValue('content', '')
-			close()
+      console.log(response);
+      setValue('title', '');
+      setValue('content', '');
+			close();
+      window.location.reload();
 		} catch (error) {
 			console.log(error);
 		}
 	}
+
   return (
     <>
       <Dialog open={open} as="div" className="relative z-10 focus:outline-none transition duration-150 ease-out" transition onClose={close}>

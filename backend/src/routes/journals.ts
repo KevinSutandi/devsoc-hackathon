@@ -41,6 +41,10 @@ router.post("/create", async (req: Request, res: Response) => {
             return res.status(400).send("Empty content");
         }
 
+        if (!date) {
+            return res.status(400).send("Current date was not parsed");
+        }
+
         const journal = await dbCreateJournal(
             customReq.token.uid,
             title,
