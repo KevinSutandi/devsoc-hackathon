@@ -11,8 +11,9 @@ router.get("/month", async (req, res) => {
         if (!customReq.token || typeof customReq.token === "string") {
             throw new Error("Token is not valid");
         }
+        const data = await dbGetMonthByUid(customReq.token.uid, date);
 
-        return await dbGetMonthByUid(customReq.token.uid, date);
+        return res.status(200).send(data);
     } catch (error) {
         console.log(error);
         return res.status(500).send("Server error");
@@ -29,7 +30,9 @@ router.post("/log", async (req, res) => {
             throw new Error("Token is not valid");
         }
 
-        return await dbUpsertCalendar(date, customReq.token.uid, mood);
+        const data = await dbUpsertCalendar(date, customReq.token.uid, mood);
+
+        return res.status(200).send(data);
     } catch (error) {
         console.error(error);
         return res.status(500).send("Server error");

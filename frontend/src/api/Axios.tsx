@@ -13,7 +13,6 @@ const getToken = () => {
 
 axiosInstanceWithAuth.interceptors.request.use((config) => {
   const token = getToken();
-  console.log(token)
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });

@@ -12,8 +12,6 @@ import NewEntryModal from './NewEntryModal';
 const Sidebar = () => {
     const [open, setOpen] = useState<boolean>(false);
 
-
-
     return (
         <>
             <NewEntryModal open={open} close={() => setOpen(false)} />
