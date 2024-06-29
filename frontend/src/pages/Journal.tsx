@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import JournalEntry from '../components/JournalEntry';
 import { axiosInstanceWithAuth } from '../api/Axios';
 import Cookies from 'js-cookie';
@@ -16,7 +16,6 @@ const STUB_TEXT_LONG = 'Today was quite fulfilling and balanced. My morning bega
 // TODO: Add monthly dividers
 
 const Journal: React.FC = () => {
-	const [curMonth, setCurMonth] = useState<number>(0);
 	const data = new Array<JournalEntryData>();
 
 	// Generating stub data for the meantime
@@ -33,8 +32,9 @@ const Journal: React.FC = () => {
 	// Delete the code above
 	const fetchData = async () => {
 		try {
+			const token = Cookies.get('token');
 			const data = await axiosInstanceWithAuth.post("/journals",
-				{ uid: Cookies.get('uid') }
+				{ uid: token }
 			);
 			console.log(data)
 		} catch (error) {
