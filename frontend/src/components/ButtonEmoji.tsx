@@ -6,7 +6,7 @@ interface IButtonEmojiProps {
 const ButtonEmoji = ({ emoji, onClick }: IButtonEmojiProps) => {
   return (
     <button
-      className="text-4xl hover:scale-125 hover:transition-transform hover:duration-200 duration-200"
+      className="xl:text-4xl lg:text-3xl text-4xl mt-3 hover:scale-125 hover:transition-transform hover:duration-200 duration-200"
       onClick={onClick}
     >
       {emoji}
