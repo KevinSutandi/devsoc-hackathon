@@ -1,6 +1,10 @@
 import Profile from "./NavbarComponents/Profile";
 import SidebarButton from "./NavbarComponents/SidebarButton";
-import { HomeIcon, BookOpenIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  BookOpenIcon,
+  TrophyIcon,
+} from "@heroicons/react/24/outline";
 import ButtonAddEvent from "./ButtonAddEvent";
 
 import { useState } from "react";
@@ -23,6 +27,11 @@ const Sidebar = () => {
             href="/journal"
             text="Journal"
             Icon={<BookOpenIcon />}
+          />
+          <SidebarButton
+            href="/leaderboard"
+            text="Leaderboard"
+            Icon={<TrophyIcon />}
           />
           <div className="flex justify-center w-full mt-8">
             <ButtonAddEvent open={open} setOpen={setOpen} />
