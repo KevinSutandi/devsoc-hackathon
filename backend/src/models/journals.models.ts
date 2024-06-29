@@ -20,3 +20,20 @@ export const dbCreateJournal = async (
 export const dbGetJournalById = async (id: number) => {
     return await prisma.journal.findUnique({ where: { id: id } });
 };
+
+export const dbUpdateJournal = async (
+    id: number,
+    title: string,
+    content: string,
+    image: string,
+) => {
+    return await prisma.journal.update({
+        where: { id: id },
+        data: {
+            title,
+            content,
+            image,
+            updatedAt: new Date(),
+        },
+    });
+};

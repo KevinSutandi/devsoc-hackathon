@@ -4,6 +4,7 @@ import {
     dbCreateJournal,
     dbGetAllJournals,
     dbGetJournalById,
+    dbUpdateJournal,
 } from "../models/journals.models";
 
 const router = express.Router();
@@ -60,7 +61,34 @@ router.get("/:id", async (req: Request, res: Response) => {
         }
 
         return res.send(journal);
-    } catch (error) {}
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(`Server error: ${error}`);
+    }
 });
 
+router.put(":/id", async (req: Request, res: Response) => {
+    try {
+        const journalId = parseInt(req.params.id);
+        const { title, content, image } = req.body;
+
+        const currJournal = await dbGetJournalById(journalId);
+
+        if (!currJournal) {
+            return res.status(404).send("No journal found");
+        }
+
+        const journal = await dbUpdateJournal(
+            journalId,
+            title || currJournal.title,
+            content || currJournal.content,
+            image || currJournal.image,
+        );
+
+        return res.send(journal);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(`Server error: ${error}`);
+    }
+});
 export default router;
