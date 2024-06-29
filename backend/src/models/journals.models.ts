@@ -11,9 +11,10 @@ export const dbCreateJournal = async (
     title: string,
     content: string,
     image: string,
+    date: Date,
 ) => {
     return await prisma.journal.create({
-        data: { title, profileUid: uid, content, image },
+        data: { title, profileUid: uid, content, image, createdAt: date },
     });
 };
 
@@ -33,7 +34,6 @@ export const dbUpdateJournal = async (
             title,
             content,
             image,
-            updatedAt: new Date(),
         },
     });
 };
