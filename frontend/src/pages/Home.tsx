@@ -4,6 +4,7 @@ import "../utils/calendar.css";
 import Calendar from "react-calendar";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Checkbox from "../components/Checkbox";
+import NewEntryModal from "../components/NewEntryModal";
 
 // Example data
 const initialFeelings: { [key: string]: string } = {
@@ -30,6 +31,7 @@ interface ChecklistItem {
 const Home: React.FC = () => {
   const [emoji, setEmoji] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
   const [feelings] = useState(initialFeelings); // Use example data here
   const [items, setItems] = useState<ChecklistItem[]>([
     {
@@ -83,6 +85,17 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleAddNewTask = () => {
+    const newTask: ChecklistItem = {
+      id: (items.length + 1).toString(),
+      label: value,
+      checked: false,
+    };
+    setItems((prevItems) => [...prevItems, newTask]);
+    setValue(""); // Clear the input after adding the task
+    setOpen(false); // Close the modal or input section
+  };
+
   // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
 
   // const tileDisabled = ({ date }: { date: Date }) => {
@@ -93,6 +106,14 @@ const Home: React.FC = () => {
 
   return (
     <div className="p-20 border-2 h-screen">
+      <NewEntryModal
+        open={open}
+        close={handleAddNewTask}
+        title="What task are you working on today?"
+        multiline={false}
+        value={value}
+        setValue={setValue}
+      />
       <h1 className="text-4xl">Mood Calender</h1>
       <div className="h-[65%] mt-[3%] w-[90%]">
         <div className="flex h-full">
@@ -123,7 +144,10 @@ const Home: React.FC = () => {
             <div className="flex-1 w-full h-[60%] flex flex-col rounded-2xl bg-yellow-50 shadow-md">
               <div className="w-full h-[25%] self flex justify-between items-center px-[9%] py-[7%]">
                 <h2 className="text-lg font-semibold">Today's Checklist</h2>
-                <button className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200">
+                <button
+                  onClick={() => setOpen(true)}
+                  className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200"
+                >
                   <PlusIcon className="h-4 w-4" />
                 </button>
               </div>

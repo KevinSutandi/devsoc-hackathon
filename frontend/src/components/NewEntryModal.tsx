@@ -11,11 +11,20 @@ export default function MyModal({
   open,
   close,
   title,
+  multiline,
+  value,
+  setValue,
 }: {
   open: boolean;
   close: () => void;
   title: string;
+  multiline: boolean;
+  value: string;
+  setValue: any;
 }) {
+  const handleValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(event.target.value);
+  };
   return (
     <>
       <Dialog
@@ -41,9 +50,12 @@ export default function MyModal({
               >
                 {title}
               </DialogTitle>
+
               <Textarea
                 className="mt-3 block w-full resize-none rounded-lg border-none bg-white py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
-                rows={11}
+                rows={multiline ? 11 : 1}
+                value={value}
+                onChange={handleValueChange}
               />
               <div className="mt-6 flex justify-end">
                 <Button

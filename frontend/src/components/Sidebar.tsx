@@ -15,6 +15,9 @@ const Sidebar = () => {
         open={open}
         close={() => setOpen(false)}
         title="Tell us how your day went!"
+        multiline
+        value={""}
+        setValue={""}
       />
       <div className="fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl rounded-r-xl pt-10">
         <div className="flex flex-col w-full items-center gap-1">
