@@ -100,10 +100,9 @@ const Home: React.FC = () => {
 
   const handleAddNewTask = async () => {
     try {
-      const response = await axiosInstanceWithAuth.post("/todo/create", {
+      await axiosInstanceWithAuth.post("/todo/create", {
         note: value,
       });
-      console.log(response);
     } catch (err) {
       console.error("Error: ", err);
     }
