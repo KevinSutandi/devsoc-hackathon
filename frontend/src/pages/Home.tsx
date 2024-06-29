@@ -93,11 +93,12 @@ const Home: React.FC = () => {
 
   const handleAddNewTask = async () => {
     try {
-      await axiosInstanceWithAuth.post("/todo/create", {
+      const response = await axiosInstanceWithAuth.post("/todo/create", {
         note: value,
       });
+      console.log(response);
     } catch (err) {
-      console.error(err);
+      console.error("Error: ", err);
     }
 
     const newTask: ChecklistItem = {
@@ -233,8 +234,8 @@ const Home: React.FC = () => {
                 </div>
 
                 <div className="mx-[9%] flex flex-col gap-y-2 overflow-y-scroll mb-[9%] no-scrollbar overflow-x-scroll">
-                  {items.map((item) => (
-                    <div>
+                  {items.map((item, index) => (
+                    <div key={index}>
                       <Checkbox
                         checked={item.check}
                         label={item.note}
