@@ -23,3 +23,19 @@ export const dbGetUserProfileByUid = async (uid: string) => {
         },
     });
 };
+
+export const dbUpdateUserProfile = async (
+    uid: string,
+    fullname: string,
+    image: string,
+) => {
+    return await prisma.profile.update({
+        where: {
+            uid,
+        },
+        data: {
+            image,
+            fullname,
+        },
+    });
+};
