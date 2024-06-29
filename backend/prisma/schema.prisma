@@ -30,6 +30,7 @@ model Profile {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Journal   Journal[]
+  log       Log[]
 }
 
 model Journal {
@@ -41,4 +42,26 @@ model Journal {
   updatedAt  DateTime @updatedAt
   author     Profile  @relation(fields: [profileUid], references: [uid])
   profileUid String
+}
+
+enum Mood {
+  LAUGHING
+  HAPPY
+  NEUTRAL
+  CRYING
+  WORRIED
+  SAD
+  ANGRY
+}
+
+model Log {
+  uid   String
+  user  Profile @relation(fields: [uid], references: [uid])
+  id    Int     @id @default(autoincrement())
+  day   Int
+  month Int
+  year  Int
+  mood  Mood
+
+  @@unique(name: "uniqueDate", [uid, day, month, year])
 }
