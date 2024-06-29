@@ -14,19 +14,31 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(uuid())
-  email      String  @unique
+  id         String   @id @default(uuid())
+  email      String   @unique
   password   String
   profile    Profile?
-  resetToken String? @unique
+  resetToken String?  @unique
 }
 
 model Profile {
-  uid    String @unique @id
-  user      User   @relation(fields: [uid], references: [id])
+  uid       String   @id @unique
+  user      User     @relation(fields: [uid], references: [id])
   fullname  String
-  username  String @unique
+  username  String   @unique
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  journals  Journal  @relation(fields: [journalId], references: [id])
+  journalId String
+}
+
+model Journal {
+  id        String    @id @unique
+  title     String
+  content   String
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Profile   Profile[]
 }
