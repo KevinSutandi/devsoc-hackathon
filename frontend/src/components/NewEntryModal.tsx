@@ -52,7 +52,8 @@ export default function MyModal({ open, close }: { open: boolean; close: () => v
       const response = await axiosInstanceWithAuth.post("/daily/create", {
         title: data.title,
         content: data.content,
-        mood: emojiToString[currentEmoji]
+        mood: emojiToString[currentEmoji],
+        date: new Date(),
       });
       console.log(response);
       fetchJournalData();
@@ -69,7 +70,7 @@ export default function MyModal({ open, close }: { open: boolean; close: () => v
       <Dialog
         open={open}
         as="div"
-        className="relative z-10 focus:outline-none transition duration-150 ease-out"
+        className="relative z-[100] focus:outline-none transition duration-150 ease-out"
         transition
         onClose={close}
       >
