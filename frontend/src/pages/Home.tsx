@@ -17,10 +17,17 @@ const feelingEmoji: { [key: string]: string } = {
   LAUGHING: "😂",
 };
 
+interface ApiChecklistItem {
+  id: number;
+  profileUid: string;
+  note: string;
+  check: boolean;
+}
+
 interface ChecklistItem {
-  id: string;
-  label: string;
-  checked: boolean;
+  id: number;
+  note: string;
+  check: boolean;
 }
 
 const Home: React.FC = () => {
@@ -28,40 +35,56 @@ const Home: React.FC = () => {
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const [openShowDetails, setOpenShowDetails] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
+  const [items, setItems] = useState<ChecklistItem[]>([]);
   const [aiRecommendation, setAiRecommendation] = useState("");
-  const [items, setItems] = useState<ChecklistItem[]>([
-    {
-      id: "1",
-      label: "Complete project",
-      checked: false,
-    },
-    { id: "2", label: "Review code", checked: false },
-    { id: "3", label: "Deploy to production", checked: false },
-    { id: "4", label: "Complete project documentation", checked: false },
-    { id: "5", label: "Review code", checked: false },
-    { id: "6", label: "Deploy to production", checked: false },
-    { id: "7", label: "Complete project documentation", checked: false },
-    { id: "8", label: "Review code", checked: false },
-    { id: "9", label: "Deploy to production", checked: false },
-    { id: "7", label: "Complete project documentation", checked: false },
-    { id: "8", label: "Review code", checked: false },
-    { id: "9", label: "Deploy to production", checked: false },
-    { id: "7", label: "Complete project documentation", checked: false },
-    { id: "8", label: "Review code", checked: false },
-    { id: "9", label: "Deploy to production", checked: false },
-  ]);
 
-  const handleToggle = (id: string) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item,
-      ),
-    );
+  const handleToggle = async (id: number) => {
+    const itemToUpdate = items.find((item) => item.id === id);
+    if (!itemToUpdate) return;
+
+    try {
+      const updatedItem = { ...itemToUpdate, check: !itemToUpdate.check };
+      console.log(updatedItem);
+      await axiosInstanceWithAuth.put("/todo/update", {
+        id: updatedItem.id,
+        note: updatedItem.note,
+        check: updatedItem.check,
+      });
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id ? { ...item, check: !item.check } : item,
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchChecklists = async () => {
+    try {
+      const response = await axiosInstanceWithAuth.get<ApiChecklistItem[]>(
+        "/todo/all",
+      );
+
+      const modifiedItems: ChecklistItem[] = response.data.map(
+        ({ profileUid, ...rest }) => rest,
+      );
+
+      setItems(modifiedItems);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleChosenEmoji = (emoji: string) => {
-    console.log(emoji)
+    console.log("mekii");
+    console.log(emoji);
+    // setEmoji(emoji);
   };
+
+  useEffect(() => {
+    fetchChecklists();
+  }, []);
 
   const tileContent = ({ date }: { date: Date }) => {
     const dateKey = date.toLocaleDateString();
@@ -75,15 +98,33 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleAddNewTask = () => {
+  const handleAddNewTask = async () => {
+    try {
+      await axiosInstanceWithAuth.post("/todo/create", {
+        note: value,
+      });
+    } catch (err) {
+      console.error("Error: ", err);
+    }
+
     const newTask: ChecklistItem = {
-      id: (items.length + 1).toString(),
-      label: value,
-      checked: false,
+      id: items.length + 1,
+      note: value,
+      check: false,
     };
     setItems((prevItems) => [...prevItems, newTask]);
     setValue(""); // Clear the input after adding the task
     setOpenChecklist(false); // Close the modal or input section
+  };
+
+  const handleDeleteTask = async (id: number) => {
+    try {
+      const res = await axiosInstanceWithAuth.post("/todo/delete", { id });
+      console.log(res);
+      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   // const tileContent = ({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>Sunday!</p> : null;
@@ -250,18 +291,22 @@ const Home: React.FC = () => {
               <div className="w-full h-1/2 flex flex-col rounded-2xl bg-yellow-50 shadow-md">
                 <div className="w-full p-5 flex justify-between items-center">
                   <h2 className="text-lg font-semibold">Today's Checklist</h2>
-                  <button className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200">
+                  <button
+                    onClick={() => setOpenChecklist(!openChecklist)}
+                    className="h-6 w-6 border rounded-2xl border-black flex justify-center items-center hover:bg-black/15 hover:border-black/15 hover:duration-200 duration-200"
+                  >
                     <PlusIcon className="h-4 w-4" />
                   </button>
                 </div>
 
-                <div className="mx-[9%] h-1/2 flex flex-col gap-y-2 overflow-y-scroll mb-[9%] no-scrollbar overflow-x-scroll">
-                  {items.map((item) => (
-                    <div>
+                <div className="mx-[9%] flex flex-col gap-y-2 overflow-y-scroll mb-[9%] no-scrollbar overflow-x-scroll">
+                  {items.map((item, index) => (
+                    <div key={index}>
                       <Checkbox
-                        checked={item.checked}
-                        label={item.label}
+                        checked={item.check}
+                        label={item.note}
                         onChange={() => handleToggle(item.id)}
+                        onDelete={() => handleDeleteTask(item.id)}
                       />
                     </div>
                   ))}
