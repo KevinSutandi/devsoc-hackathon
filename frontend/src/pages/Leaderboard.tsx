@@ -1,4 +1,19 @@
+import { useEffect, useState } from "react";
+import { axiosInstanceWithAuth } from "../api/Axios";
+
 export default function Leaderboard() {
+  const [userOne, setUserOne] = useState("User 1");
+  const [userTwo, setUserTwo] = useState("User 2");
+  const [userThree, setUserThree] = useState("User 3");
+
+  useEffect(() => {
+    axiosInstanceWithAuth.get("/leaderboard").then((res) => {
+      setUserOne(res.data[0].username);
+      setUserTwo(res.data[1].username);
+      setUserThree(res.data[2].username);
+    });
+  }, []);
+
   return (
     <div className="bg-purple-500 h-screen flex flex-col justify-center items-center">
       <div className="w-full h-[70%] flex justify-center items-end">
