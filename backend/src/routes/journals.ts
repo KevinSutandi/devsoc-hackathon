@@ -17,7 +17,6 @@ router.post("/", async (req: Request, res: Response) => {
         if (!customReq.token || typeof customReq.token === "string") {
             throw new Error("Token is not valid");
         }
-
         const journals = await dbGetAllJournals(customReq.token.uid);
         return res.send(journals);
     } catch (error) {
@@ -32,7 +31,8 @@ router.post("/create", async (req: Request, res: Response) => {
         if (!customReq.token || typeof customReq.token === "string") {
             throw new Error("Token is not valid");
         }
-        const { title, content, image, date } = req.body;
+        const { title, content, image } = req.body;
+        const date = new Date(req.body.date);
 
         if (!title) {
             return res.status(400).send("Empty title");
@@ -42,6 +42,10 @@ router.post("/create", async (req: Request, res: Response) => {
             return res.status(400).send("Empty content");
         }
 
+        if (!date) {
+            return res.status(400).send("Current date was not parsed");
+        }
+
         const journal = await dbCreateJournal(
             customReq.token.uid,
             title,
@@ -49,7 +53,6 @@ router.post("/create", async (req: Request, res: Response) => {
             image,
             date,
         );
-
         return res.send(journal);
     } catch (error) {
         console.error(error);

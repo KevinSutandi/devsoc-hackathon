@@ -36,7 +36,7 @@ export default function Register() {
         try {
             setLoading(true);
             console.log(data)
-            await axios.post("/api/auth/register", {
+            await axios.post("api/auth/register", {
                 email: data.email,
                 username: data.username,
                 password: data.password,

@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { JournalProvider } from "./context/JournalContext";
 
 function App() {
   const navigate = useNavigate();
@@ -31,14 +32,16 @@ function App() {
   }, [navigate, location]);
 
   return (
-    <Routes>
-      <Route element={<SidebarLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/journal" element={<Journal />} />
-      </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
+    <JournalProvider>
+      <Routes>
+        <Route element={<SidebarLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/journal" element={<Journal />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </JournalProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-const DateBlock = ( { day, date } : { day: number, date: number } ) => {
+const DateBlock = ( { day, date } : { day: any, date: any } ) => {
   var dayString = 'MON';
   switch (day) {
     case day = 1: {
