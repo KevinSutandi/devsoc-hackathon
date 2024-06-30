@@ -8,8 +8,11 @@ import Register from "./pages/Register";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { JournalProvider } from "./context/JournalContext";
+import Profile from "./pages/Profile";
+import { ProfileProvider } from "./context/ProfileContext";
 import { ModalProvider } from "./context/ModalContext";
 import { EmojiProvider } from "./context/EmojiContext";
+import { CalendarProvider } from "./context/CalendarContext";
 
 function App() {
   const navigate = useNavigate();
@@ -34,20 +37,25 @@ function App() {
   }, [navigate, location]);
 
   return (
-    <EmojiProvider>
-    <ModalProvider>
-    <JournalProvider>
-      <Routes>
-        <Route element={<SidebarLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/journal" element={<Journal />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </JournalProvider>
-    </ModalProvider>
-    </EmojiProvider>
+    <CalendarProvider>
+      <EmojiProvider>
+        <ModalProvider>
+          <JournalProvider>
+            <ProfileProvider>
+              <Routes>
+                <Route element={<SidebarLayout />}>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/journal" element={<Journal />} />
+                  <Route path="/profile" element={<Profile />} />
+                </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Routes>
+            </ProfileProvider>
+          </JournalProvider>
+        </ModalProvider>
+      </EmojiProvider>
+    </CalendarProvider>
   );
 }
 

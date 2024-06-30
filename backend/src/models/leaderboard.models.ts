@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-
 export const dbGetTopHappiness = async () => {
     return await prisma.profile.findMany({
         take: 3,

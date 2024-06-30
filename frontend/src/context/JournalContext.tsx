@@ -2,13 +2,13 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { axiosInstanceWithAuth } from '../api/Axios';
 
 interface JournalEntryData {
-	content: string;
-	createdAt: string;
-	id: number;
-	image: string;
-	profileUid: string;
-	title: string;
-	updatedAt: string;
+  content: string;
+  createdAt: string;
+  id: number;
+  image: string;
+  profileUid: string;
+  title: string;
+  updatedAt: string;
 }
 
 interface JournalContextType {
@@ -23,6 +23,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const fetchJournalData = async () => {
     try {
+      console.log("Fetching journal data");
       const response = await axiosInstanceWithAuth.post("/journals");
       setEntryData(response.data);
     } catch (error) {
