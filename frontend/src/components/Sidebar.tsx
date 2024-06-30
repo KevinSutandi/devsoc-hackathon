@@ -1,6 +1,12 @@
 import Profile from "./NavbarComponents/Profile";
 import SidebarButton from "./NavbarComponents/SidebarButton";
-import { HomeIcon, BookOpenIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  BookOpenIcon,
+  TrophyIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import ButtonAddEvent from "./ButtonAddEvent";
 import { useState } from "react";
 import NewEntryModal from "./NewEntryModal";
@@ -15,13 +21,18 @@ const Sidebar = () => {
       {/* Toggle Button for Mobile */}
       <div className="fixed top-4 left-4 lg:hidden z-50 w-64">
         <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-          {sidebarOpen ? <XMarkIcon className="w-8 h-8" /> : <Bars3Icon className="w-8 h-8" />}
+          {sidebarOpen ? (
+            <XMarkIcon className="w-8 h-8" />
+          ) : (
+            <Bars3Icon className="w-8 h-8" />
+          )}
         </button>
       </div>
       {/* Sidebar */}
       <div
-        className={`fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl pt-10 transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 z-40`}
+        className={`fixed flex flex-col w-64 bg-white items-center h-screen shadow-xl pt-10 transform transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 z-40`}
       >
         <div className="flex flex-col w-full items-center gap-1">
           <div className="text-center font-extralight py-4 text-2xl tracking-wide">
@@ -30,7 +41,16 @@ const Sidebar = () => {
         </div>
         <div className="flex flex-col w-full gap-10 mt-14 mb-10">
           <SidebarButton href="/" Icon={<HomeIcon />} text="Home" />
-          <SidebarButton href="/journal" text="Journal" Icon={<BookOpenIcon />} />
+          <SidebarButton
+            href="/journal"
+            text="Journal"
+            Icon={<BookOpenIcon />}
+          />
+          <SidebarButton
+            href="/leaderboard"
+            text="Leaderboard"
+            Icon={<TrophyIcon />}
+          />
           <div className="flex justify-center w-full mt-8">
             <ButtonAddEvent open={isModalOpen} setOpen={openCloseModal} />
           </div>

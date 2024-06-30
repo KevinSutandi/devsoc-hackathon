@@ -50,6 +50,7 @@ export default function MyModal({ open, close }: { open: boolean; close: () => v
 
   const { currentEmoji } = useEmoji();
   const onSubmit = async (data: NewEntryProps) => {
+
     try {
       const response = await axiosInstanceWithAuth.post("/daily/create", {
         title: data.title,

@@ -25,5 +25,8 @@ export const dbGetMyHapiness = async (uid: string) => {
     const userRank =
         allProfiles.findIndex((profile) => profile.uid === uid) + 1;
 
-    return userRank;
+    return {
+        rank: userRank,
+        happinessLevel: allProfiles[userRank - 1].happinessPoints,
+    };
 };
