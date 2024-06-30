@@ -41,7 +41,6 @@ const Home: React.FC = () => {
   const [aiRecommendation, setAiRecommendation] = useState("");
   const { entryData, fetchCalendarData } = useCalendar();
 
-
   const handleToggle = async (id: number) => {
     const itemToUpdate = items.find((item) => item.id === id);
     if (!itemToUpdate) return;
@@ -151,13 +150,17 @@ const Home: React.FC = () => {
     const feelingsData = entryData.reduce(
       (
         acc: Record<string, string>,
-        item: { year: number; month: number; day: number; mood: string }
+        item: { year: number; month: number; day: number; mood: string },
       ) => {
-        const date = new Date(item.year, item.month + 1, item.day).toLocaleDateString();
+        const date = new Date(
+          item.year,
+          item.month + 1,
+          item.day,
+        ).toLocaleDateString();
         acc[date] = item.mood;
         return acc;
       },
-      {}
+      {},
     );
     setFeelings(feelingsData);
   }, [entryData]); // Update feelings when entryData changes
@@ -257,7 +260,7 @@ const Home: React.FC = () => {
 
         <div className="bg-red-300 mt-5 rounded-2xl px-5 py-3">
           <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full flex">
-            Sentiment Analysis by Gemini AI
+            Your Personal AI Therapist
           </h2>
           <div>{aiRecommendation}</div>
         </div>
