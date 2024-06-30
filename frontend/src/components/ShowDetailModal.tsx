@@ -23,7 +23,6 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
     })
 
     const getJournalData = async () => {
-        console.log(date.toLocaleDateString())
         try {
             const response = await axiosInstanceWithAuth.get("/daily", {
                 params: {
@@ -31,7 +30,18 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
                 },
             });
             console.log(response.data);
-            setData(response.data);
+            const journalData = response.data.journal;
+            const calendarData = response.data.calendar;
+
+            setData({
+                calendar: {
+                    mood: calendarData.mood,
+                },
+                journal: {
+                    title: journalData.title,
+                    content: journalData.content,
+                }
+            })
         } catch (error) {
             console.error(error);
         }
@@ -78,8 +88,8 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
                                 </DialogTitle>
                                 <Textarea
                                     disabled
-                                    // value={data.title}
-                                    className="mt-3 mb-3 block w-full resize-none rounded-lg border-none bg-white py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
+                                    value={data.journal.title}
+                                    className="mt-3 mb-3 block w-full resize-none rounded-lg border-none bg-white disabled:bg-gray-200 py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
                                     rows={1}
                                 />
                                 <DialogTitle
@@ -93,7 +103,7 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
                                         <ButtonEmojiDisabled
                                             key={key}
                                             emoji={feelingEmoji[key]}
-                                            modalMode={true}
+                                            emojiSelected={feelingEmoji[(data.calendar.mood).toLowerCase()]}
                                         />
                                     ))}
                                 </div>
@@ -105,8 +115,8 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
                                 </DialogTitle>
                                 <Textarea
                                     disabled
-                                    // value={data.content}
-                                    className="mt-3 block w-full resize-none rounded-lg border-none bg-white py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
+                                    value={data.journal.content}
+                                    className="mt-3 block w-full resize-none rounded-lg border-none bg-white disabled:bg-gray-200 py-1.5 px-3 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500/75"
                                     rows={11}
 
                                 />

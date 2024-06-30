@@ -53,6 +53,12 @@ export const dbDeleteJournal = async (id: number) => {
 
 export const dbGetJournalByDate = async (uid: string, date: Date) => {
     return await prisma.journal.findFirst({
-        where: { profileUid: uid, createdAt: date },
+        where: {
+            profileUid: uid,
+            createdAt: {
+                gte: date,
+                lt: new Date(date.getTime() + 86400000),
+            },
+        },
     });
 };
