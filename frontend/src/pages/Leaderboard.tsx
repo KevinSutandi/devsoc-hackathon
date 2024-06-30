@@ -6,6 +6,7 @@ export default function Leaderboard() {
   const [userTwo, setUserTwo] = useState("User 2");
   const [userThree, setUserThree] = useState("User 3");
   const [userRank, setUserRank] = useState(-1);
+  const [userPoints, setUserPoints] = useState(0);
   const [allUsers, setAllUsers] = useState([]);
 
   useEffect(() => {
@@ -16,7 +17,8 @@ export default function Leaderboard() {
       if (res.data.length <= 3) setUserThree(res.data[2].fullname);
     });
     axiosInstanceWithAuth.get("/leaderboard/").then((res) => {
-      setUserRank(res.data);
+      setUserRank(res.data.rank);
+      setUserPoints(res.data.happinessLevel);
     });
     axiosInstanceWithAuth.get("/leaderboard/all").then((res) => {
       setAllUsers(res.data);
@@ -43,14 +45,13 @@ export default function Leaderboard() {
         </div>
       </div>
 
-      <div className="flex h-10 flex-col">
+      <div className="flex h-10 flex-row">
         <div className="">
           You are in {userRank} position out of {allUsers.length} users.
         </div>
-        {/* <div className="flex gap-10">
-          <div>{}</div>
-          <div>Happiness Point</div>
-        </div> */}
+        <div className="flex gap-10">
+          <div>You have {userPoints} Happiness Point</div>
+        </div>
       </div>
     </div>
   );

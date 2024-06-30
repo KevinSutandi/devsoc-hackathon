@@ -33,8 +33,8 @@ router.get("/", async (req, res) => {
             throw new Error("Token is not valid");
         }
 
-        const top = await dbGetMyHapiness(customReq.token.uid);
-        res.status(200).send(top);
+        const data = await dbGetMyHapiness(customReq.token.uid);
+        res.status(200).send(data);
     } catch (error) {
         res.status(500).send("Error Server");
     }
