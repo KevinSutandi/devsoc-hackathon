@@ -22,13 +22,13 @@ const JournalEntry = ({ date, text, title }: { date: string, text: string, title
   }, [])
 
   return (
-    <div className="rounded-2xl p-4 my-3 bg-slate-100 shadow-md flex justify-between">
+    <div className="rounded-2xl p-4 px-8 lg:px-4 my-3 bg-slate-100 shadow-md flex justify-between">
       <div className="flex justify-center w-1/6">
         <div className="my-2">
           <DateBlock day={day} date={localDate} />
         </div>
       </div>
-      <div className="w-5/6 p-1.5 h-fit">
+      <div className="w-5/6 p-1.5  ps-7 lg:ps-3 h-fit">
         <p className="font-bold text-lg mb-1">{title}</p>
         {showingFull ? <span>{`${text} `}</span> : <span>{`${shortened}...`}</span>}
         {sliced &&

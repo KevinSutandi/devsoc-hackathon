@@ -30,8 +30,22 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
                 },
             });
             console.log(response.data);
-            const journalData = response.data.journal;
-            const calendarData = response.data.calendar;
+            let journalData = response.data.journal;
+            let calendarData = response.data.calendar;
+
+            if (journalData === null) {
+                journalData = {
+                    title: "You haven't written a journal entry for this day!",
+                    content: "Remember to write a journal entry for today!",
+                }
+            }
+
+            if (calendarData === null) {
+                calendarData = {
+                    mood: "neutral",
+                }
+            }
+
 
             setData({
                 calendar: {
