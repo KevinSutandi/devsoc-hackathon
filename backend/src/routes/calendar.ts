@@ -1,5 +1,9 @@
 import express from "express";
-import { dbGetMonthByUid, dbUpsertCalendar } from "../models/calendar.models";
+import {
+    dbGetCalendarByUid,
+    dbGetMonthByUid,
+    dbUpsertCalendar,
+} from "../models/calendar.models";
 import { CustomRequest } from "../middleware/auth.middleware";
 
 const router = express.Router();
@@ -12,6 +16,21 @@ router.get("/month", async (req, res) => {
             throw new Error("Token is not valid");
         }
         const data = await dbGetMonthByUid(customReq.token.uid, date);
+
+        return res.status(200).send(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Server error");
+    }
+});
+
+router.get("/", async (req, res) => {
+    try {
+        const customReq = req as CustomRequest;
+        if (!customReq.token || typeof customReq.token === "string") {
+            throw new Error("Token is not valid");
+        }
+        const data = await dbGetCalendarByUid(customReq.token.uid);
 
         return res.status(200).send(data);
     } catch (error) {

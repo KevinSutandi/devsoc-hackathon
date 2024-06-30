@@ -80,6 +80,14 @@ export const dbGetMonthByUid = async (uid: string, date: Date) => {
     });
 };
 
+export const dbGetCalendarByUid = async (uid: string) => {
+    return await prisma.calendar.findMany({
+        where: {
+            uid,
+        },
+    });
+};
+
 export const dbGetCalandarByDate = async (uid: string, date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();

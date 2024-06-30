@@ -1,5 +1,5 @@
-const DateBlock = ( { day, date } : { day: any, date: any } ) => {
-  var dayString = 'MON';
+const DateBlock = ({ day, date }: { day: number, date: number }) => {
+  let dayString = 'MON';
   switch (day) {
     case day = 1: {
       dayString = 'MON';
@@ -34,7 +34,7 @@ const DateBlock = ( { day, date } : { day: any, date: any } ) => {
       break;
     }
   }
-  
+
   return (
     <div className="bg-yellow-200 rounded-2xl px-4 py-2 flex flex-wrap justify-center text-center">
       <p className="w-full font-bold text-xl">{`${dayString}`}</p>

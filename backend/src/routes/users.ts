@@ -41,10 +41,13 @@ router.put("/", async (req, res) => {
 
         const { fullname, image } = req.body;
         await dbUpdateUserProfile(customReq.token.uid, fullname, image);
-    } catch (error) {}
+
+        return res.status(200).send("Profile updated");
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Server error");
+    }
 });
-
-
 
 // router.get("/:uid", async (req, res) => {
 //     // TODO CHECK IF USER IS FRIENDS

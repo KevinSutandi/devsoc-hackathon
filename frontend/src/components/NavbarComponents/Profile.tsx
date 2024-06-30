@@ -5,16 +5,23 @@ import {
   MenuItems,
   Transition,
 } from "@headlessui/react";
-import ProfilePic from "../../assets/Mazesoba.jpg";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useProfile } from "../../context/ProfileContext";
+import { useEffect } from "react";
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Profile() {
+  const { entryData, fetchProfileData } = useProfile();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -29,13 +36,13 @@ export default function Profile() {
       <div>
         <MenuButton className="flex w-full justify-start items-center gap-x-5 rounded-md px-7 py-5 text-sm text-gray-900">
           <img
-            className="w-11 h-11 rounded-full"
-            src={ProfilePic}
+            className="w-10 h-10 rounded-full"
+            src={entryData.image ? entryData.image : "https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"}
             alt="Rounded avatar"
           />
           <div className="flex flex-col w-full justify-start items-start tracking-widest">
             <p className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis max-w-36">
-              Kevin Sutandi
+              {entryData.fullname}
             </p>
           </div>
         </MenuButton>
@@ -50,7 +57,7 @@ export default function Profile() {
       >
         <MenuItems
           anchor="top"
-          className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="absolute right-0 z-[60] mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
         >
           <div className="py-1">
             <MenuItem>

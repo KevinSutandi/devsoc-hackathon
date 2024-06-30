@@ -37,8 +37,9 @@ export const generateResponse = async (req: Request, res: Response) => {
 
         const textForAI = combineJournals(customReq.token.uid, 7);
 
-        const prompt = `Pretend you're a therapist. This is your patient journals. Give a short advice to your patient.
-        Remove the heading on your response
+        const prompt = `Pretend you're a therapist. This is your patient journals. Give a feedback to your patient based on their journals.
+        Remove the heading on your response. Don't put any patient details, just put the advice. Don't format the text in anything. Don't use
+        any bullet points
         ${textForAI}`;
 
         const result = await chat.sendMessage(prompt);
