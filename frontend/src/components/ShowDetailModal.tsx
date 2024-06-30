@@ -29,7 +29,6 @@ export default function MyModal({ open, close, date }: { open: boolean, close: (
                     date: date,
                 },
             });
-            console.log(response.data);
             let journalData = response.data.journal;
             let calendarData = response.data.calendar;
 

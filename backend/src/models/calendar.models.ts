@@ -89,9 +89,13 @@ export const dbGetCalendarByUid = async (uid: string) => {
 };
 
 export const dbGetCalandarByDate = async (uid: string, date: Date) => {
+    // Set date to yesterday
+    date.setDate(date.getDate() + 1);
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDay();
+
+    console.log(year, month, day);
 
     return await prisma.calendar.findFirst({
         where: {
