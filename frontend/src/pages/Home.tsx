@@ -41,6 +41,7 @@ const Home: React.FC = () => {
   const [aiRecommendation, setAiRecommendation] = useState("");
   const { entryData, fetchCalendarData } = useCalendar();
 
+
   const handleToggle = async (id: number) => {
     const itemToUpdate = items.find((item) => item.id === id);
     if (!itemToUpdate) return;
@@ -150,17 +151,13 @@ const Home: React.FC = () => {
     const feelingsData = entryData.reduce(
       (
         acc: Record<string, string>,
-        item: { year: number; month: number; day: number; mood: string },
+        item: { year: number; month: number; day: number; mood: string }
       ) => {
-        const date = new Date(
-          item.year,
-          item.month + 1,
-          item.day,
-        ).toLocaleDateString();
+        const date = new Date(item.year, item.month + 1, item.day).toLocaleDateString();
         acc[date] = item.mood;
         return acc;
       },
-      {},
+      {}
     );
     setFeelings(feelingsData);
   }, [entryData]); // Update feelings when entryData changes
@@ -214,12 +211,12 @@ const Home: React.FC = () => {
             </div>
 
             <div className="md:w-[30%] md:h-full w-full mt-10 md:mt-0 flex flex-col justify-center items-center md:gap-4 gap-4">
-              <div className="w-full h-full flex flex-col rounded-2xl items-center bg-green-50 shadow-md">
-                <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full self flex justify-center pt-[7%]">
+              <div className="w-full md:h-1/2 h-full flex flex-col rounded-2xl items-center bg-green-50 shadow-md">
+                <h2 className="xl:text-lg lg:text-sm text-lg font-semibold w-full self flex justify-center pt-[7%]">
                   How are you feeling today?
                 </h2>
 
-                <div className="mt-1 grid grid-cols-3 gap-x-5 w-full h-3/4 justify-center items-center pb-4">
+                <div className="mt-1 grid grid-cols-3 gap-x-5 w-full md:h-3/4 justify-center items-center pb-4">
                   {Object.keys(feelingEmoji).map((key) => (
                     <ButtonEmoji
                       key={key}
@@ -260,7 +257,7 @@ const Home: React.FC = () => {
 
         <div className="bg-red-300 mt-5 rounded-2xl px-5 py-3">
           <h2 className="xl:text-lg lg:text-sm text-xl font-semibold w-full flex">
-            You Personal AI Therapist
+            Sentiment Analysis by Gemini AI
           </h2>
           <div>{aiRecommendation}</div>
         </div>

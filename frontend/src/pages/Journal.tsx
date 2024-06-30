@@ -91,7 +91,7 @@ const Journal: React.FC = () => {
 				<div className='flex flex-col-reverse'>
 					{Object.keys(groupedEntries).map(monthYear => (
 						<div key={monthYear}>
-							<div className='flex align-middle justify-center text-center'>
+							<div className='flex align-middle justify-center text-center '>
 								<div className='text-lg my-2 w-1/4'>{monthYear}</div>
 								<div className='border-slate-200 border-2 rounded-md h-[1px] w-full my-auto mx-4'></div>
 							</div>
