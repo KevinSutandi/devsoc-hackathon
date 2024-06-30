@@ -16,6 +16,7 @@ const model = configuration.getGenerativeModel({ model: modelId });
 const combineJournals = async (uid: string, limit?: number) => {
     try {
         const journals = await dbGetAllJournals(uid, limit);
+
         return journals
             .map((journal) => `${journal.title}: ${journal.content}`)
             .join("\n");
@@ -35,7 +36,13 @@ export const generateResponse = async (req: Request, res: Response) => {
 
         const chat = model.startChat();
 
-        const textForAI = combineJournals(customReq.token.uid, 7);
+        const textForAI = await combineJournals(customReq.token.uid, 7);
+
+        if (!textForAI) {
+            return res.send(
+                "Your journal is still empty, start writing journals to get feedbacks",
+            );
+        }
 
         const prompt = `Pretend you're a therapist. This is your patient journals. Give a feedback to your patient based on their journals.
         Remove the heading on your response. Don't put any patient details, just put the advice. Don't format the text in anything. Don't use
@@ -45,7 +52,7 @@ export const generateResponse = async (req: Request, res: Response) => {
         const result = await chat.sendMessage(prompt);
         const responseText = result.response.text();
 
-        res.send(responseText);
+        return res.send(responseText);
     } catch (error) {
         console.error(error);
         return res.status(500).send(`Server error ${error}`);
