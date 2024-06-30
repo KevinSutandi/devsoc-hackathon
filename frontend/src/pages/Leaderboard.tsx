@@ -47,10 +47,10 @@ export default function Leaderboard() {
         <div className="">
           You are in {userRank} position out of {allUsers.length} users.
         </div>
-        <div className="flex gap-10">
-          <div>Full Name</div>
+        {/* <div className="flex gap-10">
+          <div>{}</div>
           <div>Happiness Point</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
